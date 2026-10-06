@@ -3,136 +3,177 @@
   "scenes": [
     {
       "id": "intro",
-      "frames": 322,
+      "frames": 343,
       "chunks": [
         {
           "file": "audio/narration/01-1.wav",
           "startFrame": 14,
           "frames": 57,
-          "seconds": 1.899
+          "seconds": 1.899,
+          "marks": {}
         },
         {
           "file": "audio/narration/01-2.wav",
           "startFrame": 79,
           "frames": 107,
-          "seconds": 3.541
+          "seconds": 3.541,
+          "marks": {}
         },
         {
           "file": "audio/narration/01-3.wav",
           "startFrame": 195,
           "frames": 109,
-          "seconds": 3.627
+          "seconds": 3.627,
+          "marks": {
+            "east": 45,
+            "west": 61
+          }
         }
       ]
     },
     {
       "id": "morning",
-      "frames": 337,
+      "frames": 358,
       "chunks": [
         {
           "file": "audio/narration/02-1.wav",
           "startFrame": 14,
           "frames": 101,
-          "seconds": 3.349
+          "seconds": 3.349,
+          "marks": {
+            "fog": 46
+          }
         },
         {
           "file": "audio/narration/02-2.wav",
           "startFrame": 123,
           "frames": 86,
-          "seconds": 2.859
+          "seconds": 2.859,
+          "marks": {
+            "h8": 29
+          }
         },
         {
           "file": "audio/narration/02-3.wav",
           "startFrame": 218,
           "frames": 102,
-          "seconds": 3.371
+          "seconds": 3.371,
+          "marks": {
+            "h10": 44
+          }
         }
       ]
     },
     {
       "id": "vanguard",
-      "frames": 378,
+      "frames": 399,
       "chunks": [
         {
           "file": "audio/narration/03-1.wav",
           "startFrame": 14,
           "frames": 75,
-          "seconds": 2.496
+          "seconds": 2.496,
+          "marks": {
+            "fukushima": 20,
+            "ii": 50
+          }
         },
         {
           "file": "audio/narration/03-2.wav",
           "startFrame": 97,
           "frames": 106,
-          "seconds": 3.52
+          "seconds": 3.52,
+          "marks": {
+            "iiGo": 30
+          }
         },
         {
           "file": "audio/narration/03-3.wav",
           "startFrame": 212,
           "frames": 148,
-          "seconds": 4.917
+          "seconds": 4.917,
+          "marks": {}
         }
       ]
     },
     {
       "id": "betrayal",
-      "frames": 258,
+      "frames": 279,
       "chunks": [
         {
           "file": "audio/narration/04-1.wav",
           "startFrame": 14,
           "frames": 127,
-          "seconds": 4.203
+          "seconds": 4.203,
+          "marks": {
+            "kobayakawa": 45,
+            "betray": 101
+          }
         },
         {
           "file": "audio/narration/04-2.wav",
           "startFrame": 149,
           "frames": 91,
-          "seconds": 3.029
+          "seconds": 3.029,
+          "marks": {}
         }
       ]
     },
     {
       "id": "shots",
-      "frames": 340,
+      "frames": 361,
       "chunks": [
         {
           "file": "audio/narration/05-1.wav",
           "startFrame": 14,
           "frames": 148,
-          "seconds": 4.907
+          "seconds": 4.907,
+          "marks": {
+            "gun": 51
+          }
         },
         {
           "file": "audio/narration/05-2.wav",
           "startFrame": 170,
           "frames": 152,
-          "seconds": 5.067
+          "seconds": 5.067,
+          "marks": {
+            "split": 106
+          }
         }
       ]
     },
     {
       "id": "end",
-      "frames": 452,
+      "frames": 473,
       "chunks": [
         {
           "file": "audio/narration/06-1.wav",
           "startFrame": 14,
           "frames": 96,
-          "seconds": 3.168
+          "seconds": 3.168,
+          "marks": {
+            "noon": 30
+          }
         },
         {
           "file": "audio/narration/06-2.wav",
           "startFrame": 118,
           "frames": 208,
-          "seconds": 6.912
+          "seconds": 6.912,
+          "marks": {
+            "oct1": 2
+          }
         },
         {
           "file": "audio/narration/06-3.wav",
           "startFrame": 334,
           "frames": 100,
-          "seconds": 3.317
+          "seconds": 3.317,
+          "marks": {}
         }
       ]
     }
   ],
-  "totalFrames": 2087
+  "totalFrames": 2213
 }

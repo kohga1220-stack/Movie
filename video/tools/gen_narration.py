@@ -34,7 +34,7 @@ PITCH = 0.0  # 音の高さ
 INTONATION = 1.15  # 抑揚（大きいほど抑揚が強い）
 PAUSE = 0.9  # 句読点の間の長さ
 # ---- 動画のタイミング（秒）----
-LEAD, GAP, TAIL, MIN_SCENE = 0.45, 0.3, 0.6, 3.0
+LEAD, GAP, TAIL, MIN_SCENE = 0.45, 0.3, 1.3, 3.0  # TAIL: 最後の音声のあと、フェードアウト（8フレーム）を除いて約1秒は静止させる
 PEAK = 0.8  # 最大振幅（0〜1）
 
 ort = Onnxruntime.load_once(filename=str(VV / "voicevox_onnxruntime-linux-x64-1.17.3" / "lib" / "libvoicevox_onnxruntime.so.1.17.3"))
@@ -42,6 +42,42 @@ ojt = OpenJtalk(str(pathlib.Path(pyopenjtalk.__file__).parent / "dictionary"))
 synth = Synthesizer(ort, ojt)
 with VoiceModelFile.open(str(VV / "vvm" / VVM)) as model:
     synth.load_voice_model(model)
+
+def timeline(q):
+    """AudioQuery から、各モーラの開始時刻（秒）を見積もる。(カナ, 開始) のリストと、全体の長さを返す。"""
+    t = q.pre_phoneme_length
+    out = []
+    for ap in q.accent_phrases:
+        for m in ap.moras:
+            d = ((m.consonant_length or 0) + m.vowel_length) / q.speed_scale
+            out.append((m.text, t))
+            t += d
+        if ap.pause_mora:
+            pm = ap.pause_mora
+            pl = pm["vowel_length"] if isinstance(pm, dict) else pm.vowel_length
+            t += pl * q.pause_length_scale / q.speed_scale
+    return out, t + q.post_phoneme_length
+
+
+def est_total(q):
+    return timeline(q)[1]
+
+
+def mark_times(q, marks):
+    """marks = {名前: カナの部分文字列} → {名前: その語句が始まる時刻（秒）}。見つからなければエラーにする。"""
+    moras, _ = timeline(q)
+    text = "".join(k for k, _ in moras)
+    starts = []  # 文字位置 → モーラの開始時刻
+    for k, st in moras:
+        starts += [st] * len(k)
+    res = {}
+    for name, kana in marks.items():
+        i = text.find(kana)
+        if i < 0:
+            raise SystemExit(f"目印 {name!r}（{kana}）が読みの中に見つからない: {text}")
+        res[name] = starts[i]
+    return res
+
 
 script = json.loads((ROOT / "src" / "script.json").read_text(encoding="utf-8"))
 out_dir = ROOT / "public" / "audio" / "narration"
@@ -58,6 +94,7 @@ for s_idx, scene in enumerate(script["scenes"]):
         q.speed_scale, q.pitch_scale, q.intonation_scale, q.pause_length_scale = SPEED, PITCH, INTONATION, PAUSE
         q.pre_phoneme_length, q.post_phoneme_length = 0.05, 0.1
         kana = "／".join("".join(m.text for m in ap.moras) + ("、" if ap.pause_mora else "") for ap in q.accent_phrases)
+        marks = mark_times(q, chunk.get("marks", {}))
         readings.append(f"| {chunk['text']} | {text if text != chunk['text'] else '（同じ）'} | {kana} |")
         sr, x = wavfile.read(io.BytesIO(synth.synthesis(q, STYLE_ID)))
         x = x.astype(np.float64) / 32768.0
@@ -68,7 +105,10 @@ for s_idx, scene in enumerate(script["scenes"]):
         name = f"{s_idx + 1:02d}-{c_idx + 1}.wav"
         wavfile.write(out_dir / name, sr, (x * 32767).astype(np.int16))
         dur = len(x) / sr
-        chunks.append({"file": f"audio/narration/{name}", "startFrame": round(t * FPS), "frames": math.ceil(dur * FPS), "seconds": round(dur, 3)})
+        # 語句の目印の時刻を、実際の音声の長さに合わせて補正する
+        scale = (dur - 0.0) / max(1e-6, est_total(q)) if est_total(q) > 0 else 1.0
+        chunks.append({"file": f"audio/narration/{name}", "startFrame": round(t * FPS), "frames": math.ceil(dur * FPS), "seconds": round(dur, 3),
+                       "marks": {k: round(v * scale * FPS) for k, v in marks.items()}})
         t += dur + GAP
     seconds = max(MIN_SCENE, t - GAP + TAIL)
     frames = math.ceil(seconds * FPS)

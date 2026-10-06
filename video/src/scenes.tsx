@@ -1,11 +1,18 @@
 import React, { createContext, useContext } from "react";
 import { interpolate, useCurrentFrame } from "remotion";
-import { Arrow, Clock, Flag, Fog, JapanMap, MapBase, MapLabel, PaperCard, Stamp, clamp, useProgress, useSpring } from "./parts";
+import { Arrow, Clock, Flag, Fog, JapanMap, MapBase, MapLabel, PaperCard, Stamp, accel, clamp, useProgress, useSpring } from "./parts";
 import { MAP, theme } from "./config";
 
 /** シーン内で、各ナレーション文が始まるフレーム。映像はこれに合わせて動く。 */
-export const CueContext = createContext<number[]>([]);
-const useCue = (i: number) => useContext(CueContext)[i] ?? 0;
+export type Cues = { chunks: number[]; marks: Record<string, number> };
+export const CueContext = createContext<Cues>({ chunks: [], marks: {} });
+const useCue = (i: number) => useContext(CueContext).chunks[i] ?? 0;
+/** 語句が読まれるフレーム。映像が少し先行して見えるよう、既定で 4 フレーム手前にする。 */
+const useMark = (name: string, lead = 4) => {
+  const m = useContext(CueContext).marks[name];
+  if (m === undefined) throw new Error(`目印がない: ${name}`);
+  return m - lead;
+};
 
 const Stage: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <div style={{ position: "relative", width: MAP.w, height: MAP.h }}>{children}</div>
@@ -27,8 +34,8 @@ export const SceneIntro: React.FC = () => {
   const zoom = interpolate(f, [c2, c2 + 50], [0, 1], { ...clamp });
   const basin = Math.max(0, (zoom - 0.5) * 2);
   const cardsOut = 1 - Math.min(1, zoom * 3);
-  const fe = useSpring(c2 + 40);
-  const fw = useSpring(c2 + 50);
+  const fe = useSpring(useMark("east"));
+  const fw = useSpring(useMark("west"));
   return (
     <Stage>
       <JapanMap pinAt={c0} zoom={zoom} />
@@ -54,17 +61,20 @@ export const SceneMorning: React.FC = () => {
   const c0 = useCue(0);
   const c1 = useCue(1);
   const c2 = useCue(2);
-  const hour = interpolate(f, [c2 + 10, c2 + 55], [8, 10], { ...clamp });
-  const fog = interpolate(f, [c0, c0 + 30, c2 + 40, c2 + 110], [0, 0.9, 0.9, 0.12], { ...clamp });
-  const on8 = f < c2 + 10;
+  const mFog = useMark("fog");
+  const m8 = useMark("h8");
+  const m10 = useMark("h10");
+  const hour = interpolate(f, [m10, m10 + 45], [8, 10], { ...clamp, easing: accel });
+  const fog = interpolate(f, [mFog, mFog + 30, m10 + 40, m10 + 110], [0, 0.9, 0.9, 0.12], { ...clamp });
+  const on8 = f < m10;
   return (
     <Stage>
       <MapBase dim={0.35} showLabels={false} />
       <Fog opacity={fog} />
       <Overlay top={20}>
         <Clock hours={hour} size={440} />
-        <PaperCard at={c1} title="説①　午前8時ごろ" sub="笠谷和比古" accent={on8 ? theme.accent : theme.paperEdge} size={42} dim={!on8} />
-        <PaperCard at={c2} title="説②　午前10時ごろ" sub="白峰旬" accent={on8 ? theme.paperEdge : theme.accent} size={42} dim={on8} />
+        <PaperCard at={m8} title="説①　午前8時ごろ" sub="笠谷和比古" accent={on8 ? theme.accent : theme.paperEdge} size={42} dim={!on8} />
+        <PaperCard at={m10} title="説②　午前10時ごろ" sub="白峰旬" accent={on8 ? theme.paperEdge : theme.accent} size={42} dim={on8} />
       </Overlay>
     </Stage>
   );
@@ -75,10 +85,13 @@ export const SceneVanguard: React.FC = () => {
   const c0 = useCue(0);
   const c1 = useCue(1);
   const c2 = useCue(2);
-  const pF = useProgress(c0 + 20, 70);
-  const pI = useProgress(c1 + 5, 70);
-  const f1 = useSpring(c0);
-  const f2 = useSpring(c0 + 14);
+  const mF = useMark("fukushima");
+  const mI = useMark("ii");
+  const mGo = useMark("iiGo");
+  const pF = useProgress(mF + 8, 70, accel);
+  const pI = useProgress(mGo, 70, accel);
+  const f1 = useSpring(mF);
+  const f2 = useSpring(mI);
   const src = useSpring(c2);
   const dimI = interpolate(useCurrentFrame(), [c2, c2 + 20], [1, 0.7], { ...clamp });
   return (
@@ -104,10 +117,12 @@ export const SceneBetrayal: React.FC = () => {
   const f = useCurrentFrame();
   const c0 = useCue(0);
   const c1 = useCue(1);
-  const p = useProgress(c0 + 55, 50);
-  const lab = useProgress(c0 + 50, 20);
-  const flip = f >= c0 + 55; // 寝返った後は東軍側の色
-  const fl = useSpring(c0);
+  const mK = useMark("kobayakawa");
+  const mB = useMark("betray");
+  const p = useProgress(mB, 50, accel);
+  const lab = useProgress(mB - 4, 20);
+  const flip = f >= mB; // 寝返った後は東軍側の色
+  const fl = useSpring(mK);
   const burst = useProgress(c1, 25);
   return (
     <Stage>
@@ -121,8 +136,8 @@ export const SceneBetrayal: React.FC = () => {
         <circle cx={m.x + 190} cy={m.y - 300} r={30 + burst * 120} fill="none" stroke={theme.accent} strokeWidth={6} opacity={(1 - burst) * (c1 > 0 ? 1 : 0) * (burst > 0 ? 1 : 0)} />
       </Svg>
       <Overlay top={20}>
-        <PaperCard at={c0 + 10} title="小早川秀秋・脇坂安治・小川祐忠父子ら" size={36} accent={theme.accent} />
-        <PaperCard at={c0 + 90} title="「うらきり」" sub="9月17日付　石川康通・彦坂元正連署書状" size={38} />
+        <PaperCard at={mK} title="小早川秀秋・脇坂安治・小川祐忠父子ら" size={36} accent={theme.accent} />
+        <PaperCard at={mB + 20} title="「うらきり」" sub="9月17日付　石川康通・彦坂元正連署書状" size={38} />
       </Overlay>
     </Stage>
   );
@@ -130,17 +145,18 @@ export const SceneBetrayal: React.FC = () => {
 
 export const SceneShots: React.FC = () => {
   const c0 = useCue(0);
-  const c1 = useCue(1);
+  const mGun = useMark("gun");
+  const mSplit = useMark("split");
   const q = useSpring(c0);
   return (
     <Stage>
       <MapBase dim={0.22} showLabels={false} />
       <Overlay top={0} gap={26}>
         <div style={{ fontSize: 190, fontWeight: 900, color: theme.accent, opacity: q, lineHeight: 1, transform: `scale(${0.6 + 0.4 * q})` }}>？</div>
-        <PaperCard at={c0 + 14} title="『黒田家譜』" sub="家康の指示で、福島正則隊が銃撃" size={40} />
-        <PaperCard at={c0 + 40} title="『井伊家慶長記』" sub="家康ではなく、藤堂高虎が自身の判断で銃撃" size={40} />
+        <PaperCard at={mGun + 6} title="『黒田家譜』" sub="家康の指示で、福島正則隊が銃撃" size={40} />
+        <PaperCard at={mGun + 30} title="『井伊家慶長記』" sub="家康ではなく、藤堂高虎が自身の判断で銃撃" size={40} />
         <div style={{ marginTop: 36 }}>
-          <Stamp at={c1} text="研究者の見解も分かれる" />
+          <Stamp at={mSplit} text="研究者の見解も分かれる" />
         </div>
       </Overlay>
     </Stage>
@@ -152,14 +168,16 @@ export const SceneEnd: React.FC = () => {
   const c0 = useCue(0);
   const c1 = useCue(1);
   const c2 = useCue(2);
-  const hour = interpolate(f, [c0 + 5, c0 + 55], [10, 12], { ...clamp });
+  const mNoon = useMark("noon");
+  const mOct = useMark("oct1");
+  const hour = interpolate(f, [mNoon - 40, mNoon + 6], [10, 12], { ...clamp, easing: accel });
   return (
     <Stage>
       <MapBase dim={0.2} showLabels={false} />
       <Overlay top={0}>
         <Clock hours={hour} size={300} />
-        <PaperCard at={c0 + 20} title="9月15日　午の刻（正午ごろ）に戦闘終了" sub="軍記には午後2時ごろとするものもある" size={36} accent={theme.accent} />
-        <PaperCard at={c1} title="10月1日（旧暦）　六条河原で斬首" sub="安国寺恵瓊・小西行長・石田三成" size={36} />
+        <PaperCard at={mNoon} title="9月15日　午の刻（正午ごろ）に戦闘終了" sub="軍記には午後2時ごろとするものもある" size={36} accent={theme.accent} />
+        <PaperCard at={mOct} title="10月1日（旧暦）　六条河原で斬首" sub="安国寺恵瓊・小西行長・石田三成" size={36} />
         <PaperCard at={c2} title="当日の記録は、ほとんどが後世の史料です" size={32} />
       </Overlay>
     </Stage>

@@ -32,7 +32,7 @@ export const TAGS: Record<TagKind, { label: string; border: "solid" | "dashed" |
   legend: { label: "伝承", border: "double" },
 };
 
-export type Chunk = { text: string; file: string; startFrame: number; frames: number };
+export type Chunk = { text: string; file: string; startFrame: number; frames: number; marks?: Record<string, number | undefined> };
 export type SceneDef = {
   id: string;
   title: string;
@@ -40,6 +40,8 @@ export type SceneDef = {
   frames: number;
   from: number;
   chunks: Chunk[];
+  /** 語句が読まれるシーン内のフレーム（目印の名前 → フレーム）。script.json の marks から自動で作る。 */
+  marks: Record<string, number>;
 };
 
 let cursor = 0;
@@ -52,7 +54,11 @@ export const SCENES: SceneDef[] = script.scenes.map((s, i) => {
     frames: t.frames,
     from: cursor,
     chunks: s.chunks.map((c, j) => ({ text: c.text, ...t.chunks[j] })),
+    marks: {},
   };
+  for (const c of def.chunks) {
+    for (const [name, f] of Object.entries(c.marks ?? {})) if (f !== undefined) def.marks[name] = c.startFrame + f;
+  }
   cursor += t.frames;
   return def;
 });

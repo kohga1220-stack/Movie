@@ -10,7 +10,7 @@
 - `src/config.ts`：色・シーン定義
 - `src/Text.tsx`：文節改行の文字表示（BudouX ＋ 行の長さをそろえる割り付け）
 - `src/parts.tsx`：日本地図・模式図・旗・紙のカード・時計・霧などの部品
-- `src/scenes.tsx`：各シーン（ナレーションの文ごとの開始フレームに合わせて動く）
+- `src/scenes.tsx`：各シーン。ナレーションの文ごと、さらに語句ごと（`script.json` の `marks`）の読み上げ時刻に合わせて動く
 - `src/Ep01.tsx`：第1話の合成（字幕・音声・BGM）
 - `tools/gen_narration.py`：ナレーション音声とタイミングの生成
 - `tools/gen_bgm.py`：BGM・効果音の合成（外部の音源は使わない）
@@ -34,13 +34,23 @@ npm run studio                            # プレビュー
 npx remotion render src/index.ts Ep01Sekigahara out/ep01-sekigahara.mp4 --codec=h264 --audio-codec=aac
 ```
 
+語句の同期：`src/script.json` の各文に `"marks": {"名前": "読みの一部（カナ）"}` を書くと、その語句が読まれる時刻が `timing.json` に出る。
+シーン側では `useMark("名前")` で、そのフレームを取り出せる。見つからないとエラーになる。
+
 声の速さ・高さ・抑揚は `tools/gen_narration.py` の `SPEED` / `PITCH` / `INTONATION` で調整できる。
 読み間違いは、`src/script.json` の `tts` で直す。読みの一覧は `docs/narration-readings.md`（自動生成）。
 `public/audio/` と `out/` は生成物のため、リポジトリには含めない。
 
+## 品質チェック
+
+```
+node tools/qa.mjs --stills   # 自動チェックと、目視用の静止画（out/qa/）
+```
+チェックリストは [`docs/qa-checklist.md`](../docs/qa-checklist.md)。
+
 ## 出力の確認（ffprobe）
 
-h264 / 1080x1920 / 30fps / 2087フレーム（69.6秒）／ AAC 48kHz ステレオ。
+h264 / 1080x1920 / 30fps / 2213フレーム（73.8秒）／ AAC 48kHz ステレオ。
 
 ## 公開前の確認
 
