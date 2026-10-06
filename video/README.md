@@ -19,26 +19,28 @@
 
 - 外部の画像・写真・屏風絵は使っていない。図は SVG で作成。日本地図のみ Natural Earth（パブリックドメイン）。
 - 関ヶ原周辺の図は「模式図（位置は概略）」で、縮尺や地形は正確ではない。
-- 音声は Open JTalk（HTS Voice "Mei"、CC BY 3.0 ＝ クレジット必須）。BGM・効果音は自作。
+- 音声は VOICEVOX（青山龍星、クレジット「VOICEVOX:青山龍星」が必須）。BGM・効果音は自作。
 
 ## 使い方
 
 ```
 npm install
-python -m venv .venv && .venv/bin/pip install pyopenjtalk-plus numpy scipy
-.venv/bin/python tools/gen_narration.py   # 音声と src/timing.json を作る
+bash tools/setup_voicevox.sh             # 初回のみ。VOICEVOX を公式リリースから取得（先に規約を確認すること）
+python -m venv .venv && .venv/bin/pip install .voicevox/voicevox_core-*.whl pyopenjtalk-plus numpy scipy
+.venv/bin/python tools/gen_narration.py   # 音声・src/timing.json・docs/narration-readings.md を作る
 .venv/bin/python tools/gen_bgm.py         # BGM・効果音を作る
 npm run typecheck
 npm run studio                            # プレビュー
 npx remotion render src/index.ts Ep01Sekigahara out/ep01-sekigahara.mp4 --codec=h264 --audio-codec=aac
 ```
 
-声の速さ・高さは `tools/gen_narration.py` の `SPEED` / `HALF_TONE` で調整できる。
+声の速さ・高さ・抑揚は `tools/gen_narration.py` の `SPEED` / `PITCH` / `INTONATION` で調整できる。
+読み間違いは、`src/script.json` の `tts` で直す。読みの一覧は `docs/narration-readings.md`（自動生成）。
 `public/audio/` と `out/` は生成物のため、リポジトリには含めない。
 
 ## 出力の確認（ffprobe）
 
-h264 / 1080x1920 / 30fps / 2134フレーム（71.1秒）／ AAC 48kHz ステレオ。
+h264 / 1080x1920 / 30fps / 2087フレーム（69.6秒）／ AAC 48kHz ステレオ。
 
 ## 公開前の確認
 

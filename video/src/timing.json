@@ -3,136 +3,136 @@
   "scenes": [
     {
       "id": "intro",
-      "frames": 341,
+      "frames": 322,
       "chunks": [
         {
           "file": "audio/narration/01-1.wav",
           "startFrame": 14,
-          "frames": 66,
-          "seconds": 2.19
+          "frames": 57,
+          "seconds": 1.899
         },
         {
           "file": "audio/narration/01-2.wav",
-          "startFrame": 87,
-          "frames": 114,
-          "seconds": 3.79
+          "startFrame": 79,
+          "frames": 107,
+          "seconds": 3.541
         },
         {
           "file": "audio/narration/01-3.wav",
-          "startFrame": 208,
-          "frames": 115,
-          "seconds": 3.815
+          "startFrame": 195,
+          "frames": 109,
+          "seconds": 3.627
         }
       ]
     },
     {
       "id": "morning",
-      "frames": 348,
+      "frames": 337,
       "chunks": [
         {
           "file": "audio/narration/02-1.wav",
           "startFrame": 14,
-          "frames": 106,
-          "seconds": 3.52
+          "frames": 101,
+          "seconds": 3.349
         },
         {
           "file": "audio/narration/02-2.wav",
-          "startFrame": 127,
-          "frames": 93,
-          "seconds": 3.085
+          "startFrame": 123,
+          "frames": 86,
+          "seconds": 2.859
         },
         {
           "file": "audio/narration/02-3.wav",
-          "startFrame": 227,
-          "frames": 104,
-          "seconds": 3.435
+          "startFrame": 218,
+          "frames": 102,
+          "seconds": 3.371
         }
       ]
     },
     {
       "id": "vanguard",
-      "frames": 391,
+      "frames": 378,
       "chunks": [
         {
           "file": "audio/narration/03-1.wav",
           "startFrame": 14,
-          "frames": 84,
-          "seconds": 2.79
+          "frames": 75,
+          "seconds": 2.496
         },
         {
           "file": "audio/narration/03-2.wav",
-          "startFrame": 105,
-          "frames": 113,
-          "seconds": 3.76
+          "startFrame": 97,
+          "frames": 106,
+          "seconds": 3.52
         },
         {
           "file": "audio/narration/03-3.wav",
-          "startFrame": 225,
+          "startFrame": 212,
           "frames": 148,
-          "seconds": 4.925
+          "seconds": 4.917
         }
       ]
     },
     {
       "id": "betrayal",
-      "frames": 265,
+      "frames": 258,
       "chunks": [
         {
           "file": "audio/narration/04-1.wav",
           "startFrame": 14,
-          "frames": 126,
-          "seconds": 4.18
+          "frames": 127,
+          "seconds": 4.203
         },
         {
           "file": "audio/narration/04-2.wav",
-          "startFrame": 146,
-          "frames": 101,
-          "seconds": 3.34
+          "startFrame": 149,
+          "frames": 91,
+          "seconds": 3.029
         }
       ]
     },
     {
       "id": "shots",
-      "frames": 338,
+      "frames": 340,
       "chunks": [
         {
           "file": "audio/narration/05-1.wav",
           "startFrame": 14,
-          "frames": 145,
-          "seconds": 4.83
+          "frames": 148,
+          "seconds": 4.907
         },
         {
           "file": "audio/narration/05-2.wav",
-          "startFrame": 166,
-          "frames": 154,
-          "seconds": 5.115
+          "startFrame": 170,
+          "frames": 152,
+          "seconds": 5.067
         }
       ]
     },
     {
       "id": "end",
-      "frames": 451,
+      "frames": 452,
       "chunks": [
         {
           "file": "audio/narration/06-1.wav",
           "startFrame": 14,
-          "frames": 103,
-          "seconds": 3.415
+          "frames": 96,
+          "seconds": 3.168
         },
         {
           "file": "audio/narration/06-2.wav",
-          "startFrame": 123,
-          "frames": 197,
-          "seconds": 6.545
+          "startFrame": 118,
+          "frames": 208,
+          "seconds": 6.912
         },
         {
           "file": "audio/narration/06-3.wav",
-          "startFrame": 327,
-          "frames": 105,
-          "seconds": 3.495
+          "startFrame": 334,
+          "frames": 100,
+          "seconds": 3.317
         }
       ]
     }
   ],
-  "totalFrames": 2134
+  "totalFrames": 2087
 }
