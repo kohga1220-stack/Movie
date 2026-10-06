@@ -9,12 +9,20 @@
   },
   "dependencies": {
     "@remotion/cli": "4.0.533",
+    "budoux": "0.9.3",
+    "d3-geo": "3.1.1",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "remotion": "4.0.533"
+    "remotion": "4.0.533",
+    "topojson-client": "3.1.0",
+    "world-atlas": "2.0.2"
   },
   "devDependencies": {
+    "@types/d3-geo": "^3.1.1",
+    "@types/geojson": "^7946.0.16",
     "@types/react": "^19.3.0",
+    "@types/topojson-client": "^3.1.5",
+    "@types/topojson-specification": "^1.0.5",
     "typescript": "^7.0.2"
   }
 }

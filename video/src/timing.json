@@ -1,0 +1,138 @@
+{
+  "fps": 30,
+  "scenes": [
+    {
+      "id": "intro",
+      "frames": 341,
+      "chunks": [
+        {
+          "file": "audio/narration/01-1.wav",
+          "startFrame": 14,
+          "frames": 66,
+          "seconds": 2.19
+        },
+        {
+          "file": "audio/narration/01-2.wav",
+          "startFrame": 87,
+          "frames": 114,
+          "seconds": 3.79
+        },
+        {
+          "file": "audio/narration/01-3.wav",
+          "startFrame": 208,
+          "frames": 115,
+          "seconds": 3.815
+        }
+      ]
+    },
+    {
+      "id": "morning",
+      "frames": 348,
+      "chunks": [
+        {
+          "file": "audio/narration/02-1.wav",
+          "startFrame": 14,
+          "frames": 106,
+          "seconds": 3.52
+        },
+        {
+          "file": "audio/narration/02-2.wav",
+          "startFrame": 127,
+          "frames": 93,
+          "seconds": 3.085
+        },
+        {
+          "file": "audio/narration/02-3.wav",
+          "startFrame": 227,
+          "frames": 104,
+          "seconds": 3.435
+        }
+      ]
+    },
+    {
+      "id": "vanguard",
+      "frames": 391,
+      "chunks": [
+        {
+          "file": "audio/narration/03-1.wav",
+          "startFrame": 14,
+          "frames": 84,
+          "seconds": 2.79
+        },
+        {
+          "file": "audio/narration/03-2.wav",
+          "startFrame": 105,
+          "frames": 113,
+          "seconds": 3.76
+        },
+        {
+          "file": "audio/narration/03-3.wav",
+          "startFrame": 225,
+          "frames": 148,
+          "seconds": 4.925
+        }
+      ]
+    },
+    {
+      "id": "betrayal",
+      "frames": 265,
+      "chunks": [
+        {
+          "file": "audio/narration/04-1.wav",
+          "startFrame": 14,
+          "frames": 126,
+          "seconds": 4.18
+        },
+        {
+          "file": "audio/narration/04-2.wav",
+          "startFrame": 146,
+          "frames": 101,
+          "seconds": 3.34
+        }
+      ]
+    },
+    {
+      "id": "shots",
+      "frames": 338,
+      "chunks": [
+        {
+          "file": "audio/narration/05-1.wav",
+          "startFrame": 14,
+          "frames": 145,
+          "seconds": 4.83
+        },
+        {
+          "file": "audio/narration/05-2.wav",
+          "startFrame": 166,
+          "frames": 154,
+          "seconds": 5.115
+        }
+      ]
+    },
+    {
+      "id": "end",
+      "frames": 451,
+      "chunks": [
+        {
+          "file": "audio/narration/06-1.wav",
+          "startFrame": 14,
+          "frames": 103,
+          "seconds": 3.415
+        },
+        {
+          "file": "audio/narration/06-2.wav",
+          "startFrame": 123,
+          "frames": 197,
+          "seconds": 6.545
+        },
+        {
+          "file": "audio/narration/06-3.wav",
+          "startFrame": 327,
+          "frames": 105,
+          "seconds": 3.495
+        }
+      ]
+    }
+  ],
+  "totalFrames": 2134
+}
