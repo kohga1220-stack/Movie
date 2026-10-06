@@ -10,10 +10,13 @@ import { Phrase } from "./Text";
 export const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
 /** 0→1。開始フレームから easeOut で進む（シーン内のフレーム基準）。 */
-export const useProgress = (start: number, duration: number) => {
+export const useProgress = (start: number, duration: number, easing: (t: number) => number = Easing.out(Easing.cubic)) => {
   const f = useCurrentFrame();
-  return interpolate(f, [start, start + duration], [0, 1], { ...clamp, easing: Easing.out(Easing.cubic) });
+  return interpolate(f, [start, start + duration], [0, 1], { ...clamp, easing });
 };
+
+/** 動きに加速度をつける（等速にしない）。矢印の前進などに使う。 */
+export const accel = Easing.inOut(Easing.cubic);
 
 /** バネ（mass 1 / stiffness 180 / damping 22）。 */
 export const useSpring = (delay = 0) => {

@@ -53,13 +53,13 @@ const Title: React.FC<{ scene: SceneDef }> = ({ scene }) => {
 const SceneFrame: React.FC<{ scene: SceneDef }> = ({ scene }) => {
   const f = useCurrentFrame();
   const Scene = SCENE_COMPONENTS[scene.id];
-  const fade = interpolate(f, [0, 8, scene.frames - 10, scene.frames], [0, 1, 1, 0], { ...clamp });
+  const fade = interpolate(f, [0, 8, scene.frames - 8, scene.frames], [0, 1, 1, 0], { ...clamp });
   const push = interpolate(f, [0, scene.frames], [1, 1.045], { ...clamp });
   return (
     <AbsoluteFill style={{ opacity: fade }}>
       <Title scene={scene} />
       <div style={{ position: "absolute", top: MAP_TOP, left: 0, transform: `scale(${push})`, transformOrigin: "50% 40%" }}>
-        <CueContext.Provider value={scene.chunks.map((c) => c.startFrame)}>
+        <CueContext.Provider value={{ chunks: scene.chunks.map((c) => c.startFrame), marks: scene.marks }}>
           <Scene />
         </CueContext.Provider>
       </div>
