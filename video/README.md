@@ -45,10 +45,20 @@ npx remotion render src/index.ts Ep01Sekigahara out/ep01-sekigahara.mp4 --codec=
 読み間違いは、`src/script.json` の `tts` で直す。読みの一覧は `docs/narration-readings.md`（自動生成）。
 `public/audio/` と `out/` は生成物のため、リポジトリには含めない。
 
+## 音量（書き出しのあとに必ず行う）
+
+Remotion の書き出しそのままの音量は小さい（約 -20 LUFS）。SNS 向けの標準（約 -14 LUFS）に整えてから、投稿・共有する。
+
+```
+node tools/master.mjs out/ep01-sekigahara.mp4 --share
+# → out/ep01-sekigahara-master.mp4（映像はそのまま・音量を整えたもの）
+# → out/ep01-sekigahara-share.mp4（共有用に圧縮。上限のあるチャット等で送るとき）
+```
+
 ## 品質チェック
 
 ```
-node tools/qa.mjs --stills   # 自動チェックと、目視用の静止画（out/qa/）
+node tools/qa.mjs --stills   # 自動チェック（音量含む）と、目視用の静止画（out/qa/）。既定の対象は master 版
 ```
 チェックリストは [`docs/qa-checklist.md`](../docs/qa-checklist.md)。
 

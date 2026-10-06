@@ -8,6 +8,7 @@
 - [ ] フレーム数が `src/timing.json` と一致
 - [ ] 音声ストリームがある。映像と音声の長さが一致
 - [ ] 長さが 90 秒以内
+- [ ] 音量（統合ラウドネス）が -16〜-12 LUFS（`node tools/master.mjs` で整える。整える前は約 -20 LUFS で、スマホでは小さい）
 - [ ] 読みの一覧（`docs/narration-readings.md`）が最新
 
 ## 目視（`--stills` の静止画）
