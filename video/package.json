@@ -1,0 +1,20 @@
+{
+  "name": "history-shorts",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "studio": "remotion studio",
+    "typecheck": "tsc --noEmit",
+    "render:ep01": "remotion render src/index.ts Ep01Sekigahara out/ep01-sekigahara.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.533",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "remotion": "4.0.533"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "typescript": "^7.0.2"
+  }
+}
