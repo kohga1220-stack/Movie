@@ -40,6 +40,7 @@ if (args.includes("--stills")) {
     from += sc.frames;
   }
   const browser = process.env.BROWSER_EXECUTABLE ? [`--browser-executable=${process.env.BROWSER_EXECUTABLE}`] : [];
+  browser.push("--gl=angle"); // 3D（WebGL）の描画
   for (const [name, f] of frames) {
     execFileSync("npx", ["remotion", "still", "src/index.ts", "Ep01Sekigahara", `out/qa/${name}.png`, `--frame=${f}`, ...browser], { stdio: "ignore" });
   }

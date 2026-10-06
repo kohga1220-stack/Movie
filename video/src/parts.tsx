@@ -33,6 +33,7 @@ export const TagBadge: React.FC<{ kind: TagKind; delay?: number }> = ({ kind, de
       style={{
         display: "inline-block",
         padding: "6px 26px",
+        fontFamily: theme.serif,
         fontSize: 40,
         fontWeight: 700,
         color: theme.accent,
@@ -48,7 +49,7 @@ export const TagBadge: React.FC<{ kind: TagKind; delay?: number }> = ({ kind, de
   );
 };
 
-/** 紙のカード（史料カード）。文字は Phrase で文節改行する。 */
+/** 史料カード。暗いガラス調のパネルに、明朝体で表示する。文字は Phrase で文節改行する。 */
 export const PaperCard: React.FC<{
   at: number;
   title: string;
@@ -57,26 +58,28 @@ export const PaperCard: React.FC<{
   accent?: string;
   width?: number | string;
   dim?: boolean;
-}> = ({ at, title, sub, size = 44, accent = theme.paperEdge, width = "100%", dim = false }) => {
+}> = ({ at, title, sub, size = 44, accent = "rgba(217,164,65,0.55)", width = "100%", dim = false }) => {
   const s = useSpring(at);
-  const avail = (typeof width === "number" ? width : 960) - 78 - 4; // 余白・枠・安全マージン
+  const avail = (typeof width === "number" ? width : 960) - 72 - 4;
   return (
     <div
       style={{
         width,
-        background: theme.paper,
-        color: theme.ink,
-        border: `5px solid ${accent}`,
-        borderRadius: 16,
-        padding: "20px 34px",
-        boxShadow: "0 10px 24px rgba(0,0,0,0.45)",
-        opacity: s * (dim ? 0.55 : 1),
+        background: "linear-gradient(180deg, rgba(24,28,38,0.86), rgba(12,14,20,0.86))",
+        color: theme.text,
+        border: `2px solid ${accent}`,
+        borderLeft: `8px solid ${accent}`,
+        borderRadius: 10,
+        padding: "16px 32px",
+        boxShadow: "0 14px 34px rgba(0,0,0,0.55)",
+        backdropFilter: "blur(6px)",
+        opacity: s * (dim ? 0.5 : 1),
         transform: `translateY(${(1 - s) * 50}px)`,
         boxSizing: "border-box",
       }}
     >
-      <Phrase text={title} maxEm={avail / size} style={{ fontSize: size, fontWeight: 700, lineHeight: 1.4 }} />
-      {sub && <Phrase text={sub} maxEm={avail / Math.round(size * 0.72)} style={{ fontSize: Math.round(size * 0.72), color: theme.inkDim, lineHeight: 1.4, marginTop: 6 }} />}
+      <Phrase text={title} maxEm={avail / size} style={{ fontFamily: theme.serif, fontSize: size, fontWeight: 700, lineHeight: 1.4 }} />
+      {sub && <Phrase text={sub} maxEm={avail / Math.round(size * 0.68)} style={{ fontFamily: theme.font, fontSize: Math.round(size * 0.68), color: theme.textDim, lineHeight: 1.4, marginTop: 4 }} />}
     </div>
   );
 };
@@ -89,6 +92,7 @@ export const Stamp: React.FC<{ at: number; text: string; rotate?: number }> = ({
       style={{
         display: "inline-block",
         padding: "10px 30px",
+        fontFamily: theme.serif,
         fontSize: 56,
         fontWeight: 900,
         color: theme.leaf,
@@ -304,5 +308,24 @@ export const Leaves: React.FC<{ count?: number }> = ({ count = 14 }) => {
         );
       })}
     </svg>
+  );
+};
+
+/** 3D の位置に追従するラベル（引き出し線つき）。 */
+export const WorldLabel: React.FC<{ x: number; y: number; text: string; sub?: string; color?: string; at?: number; dir?: "right" | "left" }> = ({
+  x, y, text, sub, color = theme.text, at = 0, dir = "right",
+}) => {
+  const s = useSpring(at);
+  const right = dir === "right";
+  return (
+    <div style={{ position: "absolute", left: x, top: y, opacity: s, transform: `translate(${right ? 0 : "-100%"}, -50%)` }}>
+      <div style={{ display: "flex", alignItems: "center", flexDirection: right ? "row" : "row-reverse", gap: 10 }}>
+        <div style={{ width: 54 * s, height: 3, background: color }} />
+        <div style={{ textShadow: "0 2px 6px rgba(0,0,0,0.9)", whiteSpace: "nowrap" }}>
+          <div style={{ fontFamily: theme.serif, fontWeight: 900, fontSize: 40, color, lineHeight: 1.1 }}>{text}</div>
+          {sub && <div style={{ fontFamily: theme.font, fontWeight: 500, fontSize: 24, color: theme.textDim }}>{sub}</div>}
+        </div>
+      </div>
+    </div>
   );
 };
