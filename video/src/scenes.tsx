@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from "react";
+import React, { useContext } from "react";
 import { interpolate, useCurrentFrame } from "remotion";
 import { Clock, JapanMap, PaperCard, Stamp, WorldLabel, accel, clamp, useSpring } from "./parts";
 import { LM } from "./terrain";
@@ -6,17 +6,9 @@ import { EXAG } from "./terrain";
 import { MAP, theme } from "./config";
 import { CANVAS_H, projectAt } from "./shots";
 import { EAST_POS, WEST_POS } from "./worldlayer";
+import { CueContext, useCue, useMark } from "./cues";
+export { CueContext };
 
-/** シーン内で、各ナレーション文・語句が読まれるフレーム。映像はこれに合わせて動く。 */
-export type Cues = { chunks: number[]; marks: Record<string, number>; from: number };
-export const CueContext = createContext<Cues>({ chunks: [], marks: {}, from: 0 });
-const useCue = (i: number) => useContext(CueContext).chunks[i] ?? 0;
-/** 語句が読まれるフレーム。映像が少し先行して見えるよう、既定で 4 フレーム手前にする。 */
-const useMark = (name: string, lead = 4) => {
-  const m = useContext(CueContext).marks[name];
-  if (m === undefined) throw new Error(`目印がない: ${name}`);
-  return m - lead;
-};
 /** 3D の点を、画面座標に変換して返す（カメラは動くので、毎フレーム計算する）。 */
 const useWorld = (p: [number, number, number]) => {
   const { from } = useContext(CueContext);

@@ -45,25 +45,34 @@ export type SceneDef = {
   marks: Record<string, number>;
 };
 
-let cursor = 0;
-export const SCENES: SceneDef[] = script.scenes.map((s, i) => {
-  const t = timing.scenes[i];
-  const def: SceneDef = {
-    id: s.id,
-    title: s.title,
-    tag: s.tag as TagKind | null,
-    frames: t.frames,
-    from: cursor,
-    chunks: s.chunks.map((c, j) => ({ text: c.text, ...t.chunks[j] })),
-    marks: {},
-  };
-  for (const c of def.chunks) {
-    for (const [name, f] of Object.entries(c.marks ?? {})) if (f !== undefined) def.marks[name] = c.startFrame + f;
-  }
-  cursor += t.frames;
-  return def;
-});
-export const DURATION = cursor;
+type ScriptJson = { scenes: { id: string; title: string; tag: string | null; chunks: { text: string }[] }[] };
+type TimingJson = { scenes: { frames: number; chunks: { file: string; startFrame: number; frames: number; marks?: Record<string, number | undefined> }[] }[] };
+
+/** 台本（script.json）と、音声から作ったタイミング（timing.json）から、場面の一覧を作る。 */
+export const buildScenes = (script: ScriptJson, timing: TimingJson): SceneDef[] => {
+  let cursor = 0;
+  return script.scenes.map((s, i) => {
+    const t = timing.scenes[i];
+    const def: SceneDef = {
+      id: s.id,
+      title: s.title,
+      tag: s.tag as TagKind | null,
+      frames: t.frames,
+      from: cursor,
+      chunks: s.chunks.map((c, j) => ({ text: c.text, ...t.chunks[j] })),
+      marks: {},
+    };
+    for (const c of def.chunks) {
+      for (const [name, f] of Object.entries(c.marks ?? {})) if (f !== undefined) def.marks[name] = c.startFrame + f;
+    }
+    cursor += t.frames;
+    return def;
+  });
+};
+export const totalFrames = (scenes: SceneDef[]) => scenes.reduce((a, s) => a + s.frames, 0);
+
+export const SCENES: SceneDef[] = buildScenes(script as ScriptJson, timing as TimingJson);
+export const DURATION = totalFrames(SCENES);
 
 export const FOOTER = "出典：Wikipedia「関ヶ原の戦い」ほか（一覧は概要欄）｜諸説あり";
 

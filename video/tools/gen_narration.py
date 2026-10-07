@@ -15,6 +15,7 @@ import io
 import json
 import math
 import pathlib
+import sys
 
 import numpy as np
 import pyopenjtalk  # 辞書（NAIST Japanese Dictionary）の取得元として使う
@@ -79,8 +80,12 @@ def mark_times(q, marks):
     return res
 
 
-script = json.loads((ROOT / "src" / "script.json").read_text(encoding="utf-8"))
-out_dir = ROOT / "public" / "audio" / "narration"
+# 引数なし = 第1話（src/script.json）。`ep02` のように話を指定すると src/ep02/ を使う。
+EP = sys.argv[1] if len(sys.argv) > 1 else None
+SRC = ROOT / "src" / EP if EP else ROOT / "src"
+AUDIO = ROOT / "public" / "audio" / EP if EP else ROOT / "public" / "audio"
+script = json.loads((SRC / "script.json").read_text(encoding="utf-8"))
+out_dir = AUDIO / "narration"
 out_dir.mkdir(parents=True, exist_ok=True)
 
 timing = {"fps": FPS, "scenes": [], "totalFrames": 0}
@@ -107,7 +112,7 @@ for s_idx, scene in enumerate(script["scenes"]):
         dur = len(x) / sr
         # 語句の目印の時刻を、実際の音声の長さに合わせて補正する
         scale = (dur - 0.0) / max(1e-6, est_total(q)) if est_total(q) > 0 else 1.0
-        chunks.append({"file": f"audio/narration/{name}", "startFrame": round(t * FPS), "frames": math.ceil(dur * FPS), "seconds": round(dur, 3),
+        chunks.append({"file": f"audio/{EP + '/' if EP else ''}narration/{name}", "startFrame": round(t * FPS), "frames": math.ceil(dur * FPS), "seconds": round(dur, 3),
                        "marks": {k: round(v * scale * FPS) for k, v in marks.items()}})
         t += dur + GAP
     seconds = max(MIN_SCENE, t - GAP + TAIL)
@@ -115,8 +120,8 @@ for s_idx, scene in enumerate(script["scenes"]):
     timing["scenes"].append({"id": scene["id"], "frames": frames, "chunks": chunks})
     timing["totalFrames"] += frames
 
-(ROOT / "src" / "timing.json").write_text(json.dumps(timing, ensure_ascii=False, indent=2), encoding="utf-8")
-(ROOT.parent / "docs" / "narration-readings.md").write_text("\n".join(readings) + "\n", encoding="utf-8")
+(SRC / "timing.json").write_text(json.dumps(timing, ensure_ascii=False, indent=2), encoding="utf-8")
+(ROOT.parent / "docs" / (f"narration-readings-{EP}.md" if EP else "narration-readings.md")).write_text("\n".join(readings) + "\n", encoding="utf-8")
 print(f"total {timing['totalFrames']} frames = {timing['totalFrames'] / FPS:.1f} s")
 for sc in timing["scenes"]:
     print(sc["id"], sc["frames"], [c["frames"] for c in sc["chunks"]])

@@ -12,7 +12,7 @@
 - `src/parts.tsx`：日本地図・ガラス調のカード・時計・ラベルなどの2D部品
 - `src/terrain.ts` / `src/World.tsx` / `src/world3d.tsx` / `src/worldlayer.tsx` / `src/shots.ts`：実際の標高データによる3D地形、軍勢（イメージ）・旗・進軍の矢印、霧と光、カメラの動き
 - `src/scenes.tsx`：各シーンの2D重ね表示（カード・ラベル）。ナレーションの文ごと、さらに語句ごと（`script.json` の `marks`）の読み上げ時刻に合わせて動く
-- `src/Ep01.tsx`：第1話の合成（字幕・音声・BGM）
+- `src/episode.tsx`：全話共通の合成（字幕・音声・BGM・仕上げ）。`src/Ep01.tsx` が第1話、`src/ep02/` が第2話（台本・タイミング・場面）
 - `tools/gen_narration.py`：ナレーション音声とタイミングの生成
 - `tools/gen_bgm.py`：BGM・効果音の合成（外部の音源は使わない）
 - `tools/gen_terrain.py`：標高データ（AWS Terrain Tiles）から3D用の地形データを作る
@@ -69,3 +69,15 @@ h264 / 1080x1920 / 30fps / 2213フレーム（73.8秒）／ AAC 48kHz ステレ�
 ## 公開前の確認
 
 `docs/episode-01-sekigahara.md` の「公開前の確認事項」を済ませるまで公開しない。
+
+## 第2話（行動主義と新行動主義）
+
+```bash
+python tools/gen_narration.py ep02   # src/ep02/script.json → 音声・src/ep02/timing.json・docs/narration-readings-ep02.md
+python tools/gen_bgm.py ep02         # public/audio/ep02/bgm.wav
+npm run render:ep02                  # out/ep02-behaviorism.mp4
+node tools/master.mjs out/ep02-behaviorism.mp4 --share
+node tools/qa.mjs out/ep02-behaviorism-master.mp4 --ep=ep02
+```
+
+台本は未検証の下書き（docs/episode-02-behaviorism.md）。事実確認のゲートを通るまで公開しない。タグの表示は「原典」「諸説」「要確認」。

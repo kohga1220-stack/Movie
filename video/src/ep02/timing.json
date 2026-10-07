@@ -1,0 +1,156 @@
+{
+  "fps": 30,
+  "scenes": [
+    {
+      "id": "intro",
+      "frames": 327,
+      "chunks": [
+        {
+          "file": "audio/ep02/narration/01-1.wav",
+          "startFrame": 14,
+          "frames": 173,
+          "seconds": 5.749,
+          "marks": {}
+        },
+        {
+          "file": "audio/ep02/narration/01-2.wav",
+          "startFrame": 195,
+          "frames": 93,
+          "seconds": 3.072,
+          "marks": {
+            "watson": 62
+          }
+        }
+      ]
+    },
+    {
+      "id": "declaration",
+      "frames": 453,
+      "chunks": [
+        {
+          "file": "audio/ep02/narration/02-1.wav",
+          "startFrame": 14,
+          "frames": 213,
+          "seconds": 7.072,
+          "marks": {}
+        },
+        {
+          "file": "audio/ep02/narration/02-2.wav",
+          "startFrame": 235,
+          "frames": 78,
+          "seconds": 2.592,
+          "marks": {}
+        },
+        {
+          "file": "audio/ep02/narration/02-3.wav",
+          "startFrame": 321,
+          "frames": 93,
+          "seconds": 3.083,
+          "marks": {}
+        }
+      ]
+    },
+    {
+      "id": "neo",
+      "frames": 407,
+      "chunks": [
+        {
+          "file": "audio/ep02/narration/03-1.wav",
+          "startFrame": 14,
+          "frames": 120,
+          "seconds": 3.979,
+          "marks": {}
+        },
+        {
+          "file": "audio/ep02/narration/03-2.wav",
+          "startFrame": 142,
+          "frames": 83,
+          "seconds": 2.741,
+          "marks": {}
+        },
+        {
+          "file": "audio/ep02/narration/03-3.wav",
+          "startFrame": 233,
+          "frames": 135,
+          "seconds": 4.48,
+          "marks": {}
+        }
+      ]
+    },
+    {
+      "id": "maze",
+      "frames": 571,
+      "chunks": [
+        {
+          "file": "audio/ep02/narration/04-1.wav",
+          "startFrame": 14,
+          "frames": 214,
+          "seconds": 7.104,
+          "marks": {}
+        },
+        {
+          "file": "audio/ep02/narration/04-2.wav",
+          "startFrame": 236,
+          "frames": 114,
+          "seconds": 3.797,
+          "marks": {}
+        },
+        {
+          "file": "audio/ep02/narration/04-3.wav",
+          "startFrame": 359,
+          "frames": 173,
+          "seconds": 5.749,
+          "marks": {}
+        }
+      ]
+    },
+    {
+      "id": "skinner",
+      "frames": 556,
+      "chunks": [
+        {
+          "file": "audio/ep02/narration/05-1.wav",
+          "startFrame": 14,
+          "frames": 250,
+          "seconds": 8.32,
+          "marks": {}
+        },
+        {
+          "file": "audio/ep02/narration/05-2.wav",
+          "startFrame": 272,
+          "frames": 152,
+          "seconds": 5.035,
+          "marks": {}
+        },
+        {
+          "file": "audio/ep02/narration/05-3.wav",
+          "startFrame": 432,
+          "frames": 85,
+          "seconds": 2.805,
+          "marks": {}
+        }
+      ]
+    },
+    {
+      "id": "end",
+      "frames": 363,
+      "chunks": [
+        {
+          "file": "audio/ep02/narration/06-1.wav",
+          "startFrame": 14,
+          "frames": 111,
+          "seconds": 3.669,
+          "marks": {}
+        },
+        {
+          "file": "audio/ep02/narration/06-2.wav",
+          "startFrame": 133,
+          "frames": 191,
+          "seconds": 6.357,
+          "marks": {}
+        }
+      ]
+    }
+  ],
+  "totalFrames": 2677
+}
