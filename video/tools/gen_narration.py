@@ -85,6 +85,7 @@ EP = sys.argv[1] if len(sys.argv) > 1 else None
 SRC = ROOT / "src" / EP if EP else ROOT / "src"
 AUDIO = ROOT / "public" / "audio" / EP if EP else ROOT / "public" / "audio"
 script = json.loads((SRC / "script.json").read_text(encoding="utf-8"))
+SPEED = script.get("speed", SPEED)  # 話ごとに話す速さを変えられる（script.json の "speed"）
 out_dir = AUDIO / "narration"
 out_dir.mkdir(parents=True, exist_ok=True)
 

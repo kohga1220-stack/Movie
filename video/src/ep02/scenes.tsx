@@ -98,14 +98,14 @@ export const Neo: React.FC = () => {
     <AbsoluteFill>
       <Timeline active={1} />
       <Col gap={30}>
-        <Chip at={c0} text="新行動主義" />
+        <Chip at={c0} text="新行動主義（1930〜40年代）" />
         <div style={{ display: "flex", gap: 24 }}>
-          <Chip at={c1} text="トールマン" />
-          <Chip at={c1 + 6} text="ハル" />
+          <Chip at={c1} text="ハル" />
+          <Chip at={c1 + 6} text="トールマン" />
         </div>
         <Chip at={c2} text="スキナー？（資料により分類が違う）" dim dashed />
         <div style={{ marginTop: 20 }}>
-          <Stamp at={c2 + 10} text="要確認" />
+          <Stamp at={c2 + 10} text="諸説" />
         </div>
       </Col>
     </AbsoluteFill>
@@ -137,12 +137,12 @@ export const MazeScene: React.FC = () => {
       <Timeline active={1} />
       <Col gap={14}>
         <Cite at={c0} author="E・C・トールマン" year={1948} title="Cognitive maps in rats and men" venue="Psychological Review, 55(4), 189–208" />
-        <div style={{ transform: "scale(0.8)", margin: "-40px 0" }}>
+        <div style={{ transform: "scale(0.7)", margin: "-60px 0" }}>
           <Maze />
         </div>
         <div style={{ fontFamily: theme.font, fontSize: 26, color: theme.textDim }}>※ 概念図（イメージ）。実際の実験装置ではありません</div>
         <Chip at={c1} text="刺激と反応だけでは説明できない" />
-        <Chip at={c2} text="再現性に疑問も" dim dashed />
+        <Chip at={c2} text="再現性に疑問（2026年のレビュー）" dim dashed />
       </Col>
     </AbsoluteFill>
   );
@@ -157,7 +157,7 @@ export const SkinnerScene: React.FC = () => {
         <Cite at={c0} author="B・F・スキナー" year={1957} title="Verbal Behavior（言語行動）" venue="書籍" />
         <div style={{ fontFamily: theme.serif, fontSize: 60, color: theme.accent, opacity: useSpring(c1) }}>▼</div>
         <Cite at={c1} author="ノーム・チョムスキー" year={1959} title="A Review of B. F. Skinner’s Verbal Behavior" venue="Language, 35(1), 26–58" />
-        <Chip at={c2} text="書評の読み方には異論あり" dim dashed />
+        <Chip at={c2} text="書評の評価は、立場によって分かれる" dim dashed />
       </Col>
     </AbsoluteFill>
   );
@@ -169,9 +169,8 @@ export const End: React.FC = () => {
     <AbsoluteFill>
       <Timeline active={-1} />
       <Col gap={34}>
-        <PaperCard at={c0} title="いまの主流は、認知心理学とされる" sub="動画の一部は百科事典の記述に基づく" size={50} />
-        <Chip at={c1} text="原典での確認が必要" dim dashed />
-        <Stamp at={c1 + 8} text="要確認" />
+        <PaperCard at={c0} title="認知革命（1950年代以降）" sub="言語学・神経科学・計算機科学の発展が、心への関心を高めたとされる" size={50} />
+        <Chip at={c1} text="出典は概要欄に掲載" dim />
       </Col>
     </AbsoluteFill>
   );

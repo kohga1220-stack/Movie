@@ -13,6 +13,24 @@
 【出典】Wikipedia「関ヶ原の戦い」ほか（一覧は台本ドキュメント docs/episode-01-sekigahara.md）
 ```
 
+### 第2話（行動主義と新行動主義）の概要欄
+
+```
+【音声】VOICEVOX:青山龍星
+【フォント】Noto Serif JP / Noto Sans JP（SIL OFL 1.1）
+【BGM・効果音】自作（スクリプトで合成）
+【出典】
+・Watson, J. B. (1913). Psychology as the behaviorist views it. Psychological Review, 20, 158–177.（Classics in the History of Psychology: https://psychclassics.yorku.ca/Watson/views.htm）
+・Tolman, E. C. (1948). Cognitive maps in rats and men. Psychological Review, 55(4), 189–208.（https://psychclassics.yorku.ca/Tolman/Maps/maps.htm）
+・Chomsky, N. (1959). A review of B. F. Skinner's Verbal Behavior. Language, 35(1), 26–58.
+・Palmer, D. C. (2006). On Chomsky's appraisal of Skinner's Verbal Behavior: A half century of misunderstanding. The Behavior Analyst, 29(2), 253–267.（https://pmc.ncbi.nlm.nih.gov/articles/PMC2223153/）
+・Tolman's Sunburst Maze 80 Years on: A Meta-Analysis Reveals Poor Replicability and Little Evidence for Shortcutting. European Journal of Neuroscience, 63(1), 2026. doi:10.1111/ejn.70365
+・Greenwood, J. D. (2015). Neobehaviorism, radical behaviorism, and problems of behaviorism. In A Conceptual History of Psychology (pp. 410–453). Cambridge University Press. doi:10.1017/CBO9781107414914.012
+・Graham, R. & Griffin, S. (2025). Cognitive Psychology, 1.2 History of Cognitive Psychology.（CC BY-NC-SA 4.0: https://nmoer.pressbooks.pub/cognitivepsychology/）
+```
+
+第2話は、画像・地図・外部の音源を使っていない（年表・書誌カード・概念図は、すべて自作の描画）。論文の英語の一文（Watson 1913 冒頭）は、短い引用として画面に出している。
+
 ## 使用した素材・ソフトウェア
 
 | 種類 | 名称 | ライセンス | 備考 |
