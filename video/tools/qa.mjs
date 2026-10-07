@@ -12,7 +12,8 @@ import { existsSync, mkdirSync, readFileSync } from "node:fs";
 
 const args = process.argv.slice(2);
 const file = args.find((a) => !a.startsWith("--")) ?? "out/ep01-sekigahara-master.mp4"; // node tools/master.mjs で音量を整えたもの
-const timing = JSON.parse(readFileSync("src/timing.json", "utf8"));
+const ep = args.find((a) => a.startsWith("--ep="))?.slice(5); // 例: --ep=ep02
+const timing = JSON.parse(readFileSync(ep ? `src/${ep}/timing.json` : "src/timing.json", "utf8"));
 const results = [];
 const check = (name, ok, detail = "") => results.push({ name, ok, detail });
 

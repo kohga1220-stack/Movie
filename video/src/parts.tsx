@@ -25,9 +25,12 @@ export const useSpring = (delay = 0) => {
   return spring({ frame: f - delay, fps, config: { mass: 1, stiffness: 180, damping: 22 } });
 };
 
+export const TagLabelContext = React.createContext<Partial<Record<TagKind, string>>>({});
+
 export const TagBadge: React.FC<{ kind: TagKind; delay?: number }> = ({ kind, delay = 0 }) => {
   const s = useSpring(delay);
-  const t = TAGS[kind];
+  const labels = React.useContext(TagLabelContext);
+  const t = { ...TAGS[kind], label: labels[kind] ?? TAGS[kind].label };
   return (
     <div
       style={{

@@ -5,6 +5,7 @@
   "scripts": {
     "studio": "remotion studio",
     "typecheck": "tsc --noEmit",
+    "render:ep02": "remotion render src/index.ts Ep02Behaviorism out/ep02-behaviorism.mp4",
     "render:ep01": "remotion render src/index.ts Ep01Sekigahara out/ep01-sekigahara.mp4",
     "fonts": "node tools/copy_fonts.mjs",
     "postinstall": "node tools/copy_fonts.mjs"

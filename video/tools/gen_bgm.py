@@ -9,6 +9,7 @@
 """
 import json
 import pathlib
+import sys
 
 import numpy as np
 from scipy.io import wavfile
@@ -16,10 +17,12 @@ from scipy.signal import fftconvolve, lfilter
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SR = 44100
-out_dir = ROOT / "public" / "audio"
+sfx_dir = ROOT / "public" / "audio"  # 効果音は全話で共有
+EP = sys.argv[1] if len(sys.argv) > 1 else None  # 例: ep02
+out_dir = sfx_dir / EP if EP else sfx_dir
 out_dir.mkdir(parents=True, exist_ok=True)
 
-timing = json.loads((ROOT / "src" / "timing.json").read_text(encoding="utf-8"))
+timing = json.loads(((ROOT / "src" / EP if EP else ROOT / "src") / "timing.json").read_text(encoding="utf-8"))
 total = timing["totalFrames"] / timing["fps"] + 1.5
 n = int(total * SR)
 rng = np.random.default_rng(7)
@@ -101,10 +104,10 @@ wavfile.write(out_dir / "bgm.wav", SR, (mix.T * 32767).astype(np.int16))
 # ---- 効果音 ----
 hit = taiko(1.4)
 hit = hit / np.abs(hit).max() * 0.8
-wavfile.write(out_dir / "sfx-hit.wav", SR, (hit * 32767).astype(np.int16))
+wavfile.write(sfx_dir / "sfx-hit.wav", SR, (hit * 32767).astype(np.int16))
 
 tt_ = np.arange(int(0.35 * SR)) / SR
 stamp = (np.sin(2 * np.pi * 330 * tt_) * np.exp(-tt_ * 22) + rng.normal(0, 1, len(tt_)) * np.exp(-tt_ * 90) * 0.4)
 stamp = stamp / np.abs(stamp).max() * 0.6
-wavfile.write(out_dir / "sfx-stamp.wav", SR, (stamp * 32767).astype(np.int16))
+wavfile.write(sfx_dir / "sfx-stamp.wav", SR, (stamp * 32767).astype(np.int16))
 print(f"bgm {total:.1f}s, peak {np.abs(mix).max():.2f}")
