@@ -22,6 +22,7 @@ export const theme = {
   west: "#c8584b", // 西軍
   leaf: "#b5452f",
   font: "'Noto Sans JP','IPAexGothic','IPAGothic',sans-serif",
+  serif: "'Noto Serif JP','IPAexMincho',serif",
 };
 
 export type TagKind = "primary" | "theory" | "legend";

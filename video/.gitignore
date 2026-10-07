@@ -2,3 +2,7 @@ node_modules
 out
 public/audio
 .voicevox
+public/fonts
+public/terrain/color.png
+public/terrain/height.bin
+out

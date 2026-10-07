@@ -7,11 +7,11 @@
 // 自動チェック: 解像度・fps・フレーム数・音声ストリーム・長さ・読みの一覧の有無。
 // 目視チェック（--stills）: 各ナレーション文の開始直後と、各場面の終わりの静止画を out/qa/ に出す。
 //   → docs/qa-checklist.md の項目（重なり・はみ出し・改行位置・静止時間）を、静止画で確認する。
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync } from "node:fs";
 
 const args = process.argv.slice(2);
-const file = args.find((a) => !a.startsWith("--")) ?? "out/ep01-sekigahara.mp4";
+const file = args.find((a) => !a.startsWith("--")) ?? "out/ep01-sekigahara-master.mp4"; // node tools/master.mjs で音量を整えたもの
 const timing = JSON.parse(readFileSync("src/timing.json", "utf8"));
 const results = [];
 const check = (name, ok, detail = "") => results.push({ name, ok, detail });
@@ -29,6 +29,10 @@ const secs = Number(probe.format.duration);
 check("長さが映像と音声で 0.1 秒以内に一致", a ? Math.abs(Number(a.duration) - Number(v.duration)) < 0.1 : false, `${v?.duration} / ${a?.duration}`);
 check("ショートとして 90 秒以内", secs <= 90, `${secs.toFixed(1)} 秒`);
 check("読みの一覧がある（docs/narration-readings.md）", existsSync("../docs/narration-readings.md"));
+// 音量：SNS 向けの目安は -14 LUFS 前後（-16〜-12）。小さすぎるとスマホで聞こえない
+const eb = spawnSync("ffmpeg", ["-hide_banner", "-nostats", "-i", file, "-vn", "-af", "ebur128=peak=true", "-f", "null", "-"], { encoding: "utf8" }).stderr;
+const loud = Number([...(eb || "").matchAll(/I:\s+(-?[\d.]+) LUFS/g)].pop()?.[1]);
+check("音量（統合ラウドネス）が -16〜-12 LUFS", loud >= -16 && loud <= -12, `${loud} LUFS`);
 
 if (args.includes("--stills")) {
   mkdirSync("out/qa", { recursive: true });
@@ -40,6 +44,7 @@ if (args.includes("--stills")) {
     from += sc.frames;
   }
   const browser = process.env.BROWSER_EXECUTABLE ? [`--browser-executable=${process.env.BROWSER_EXECUTABLE}`] : [];
+  browser.push("--gl=angle"); // 3D（WebGL）の描画
   for (const [name, f] of frames) {
     execFileSync("npx", ["remotion", "still", "src/index.ts", "Ep01Sekigahara", `out/qa/${name}.png`, `--frame=${f}`, ...browser], { stdio: "ignore" });
   }

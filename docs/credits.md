@@ -7,6 +7,8 @@
 ```
 【音声】VOICEVOX:青山龍星
 【地図】Natural Earth（パブリックドメイン）
+【地形】Terrain Tiles（AWS Open Data）。SRTM・GMTED2010 の地形データは米国地質調査所（USGS）提供、ETOPO1 は米国海洋大気庁（NOAA）。高さを強調し、平滑化して使用
+【フォント】Noto Serif JP / Noto Sans JP（SIL OFL 1.1）
 【BGM・効果音】自作（スクリプトで合成）
 【出典】Wikipedia「関ヶ原の戦い」ほか（一覧は台本ドキュメント docs/episode-01-sekigahara.md）
 ```
@@ -23,6 +25,10 @@
 | 描画 | d3-geo 3.1.1 / topojson-client 3.1.0 | ISC | |
 | 文節分割 | BudouX 0.9.3（Google） | Apache-2.0 | 文字の改行位置の決定に使用 |
 | 動画生成 | Remotion 4.0.533 | Remotion License | 個人は商用を含めて無料（同梱の `LICENSE.md` で確認）。法人の場合は規模により有償 |
+| 地形（標高）データ | AWS Open Data「Terrain Tiles」（terrarium 形式・z=12。tilezen/joerd の attribution.md の指示に従い表記） | 元データは SRTM・GMTED2010（USGS、パブリックドメイン。クレジット要請あり）、ETOPO1（NOAA、パブリックドメイン）ほか | 1.7 倍に強調し、1m 刻みの階段を平滑化（ガウシアン）している。位置の検証：南宮山 419m（Wikipedia 419m）、松尾山 周辺の最大 約289m（同 292.9m） |
+| 3D 描画 | three.js 0.170 / @react-three/fiber / @remotion/three | MIT | |
+| フォント | Noto Serif JP・Noto Sans JP（npm「@expo-google-fonts」経由） | SIL OFL 1.1 | 動画に埋め込んで使用可。同梱の `LICENSE_FONT` を参照 |
+| 山の座標 | Wikipedia「松尾山 (岐阜県)」「南宮山」 | CC BY-SA 4.0（座標という事実のみを使用） | 松尾山：北緯35.346667・東経136.453611／南宮山：北緯35.346828・東経136.509795 |
 | 関ヶ原の座標 | Wikipedia「関ケ原町」 | CC BY-SA 4.0（座標という事実のみを使用） | 北緯35.365556・東経136.466944 |
 | BGM・効果音 | 自作（`video/tools/gen_bgm.py`） | — | 外部の音源は使っていない |
 | 文字フォント | 書き出し環境のシステムフォント（IPAゴシック） | IPA Font License v1.0 | 公開用の書き出し環境では、使うフォントとそのライセンスを確認すること |
