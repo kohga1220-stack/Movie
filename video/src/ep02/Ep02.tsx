@@ -19,7 +19,7 @@ export const Ep02: React.FC = () => (
     scenes={SCENES}
     sceneComponents={SCENE_COMPONENTS}
     header="心理学の歴史 第2話　行動主義と新行動主義"
-    footer="出典：各原典の書誌・百科事典　図は概念図"
+    footer="出典：原典・論文・教科書（概要欄）　図は概念図"
     bgm="audio/ep02/bgm.wav"
     background={<Backdrop />}
     tagLabels={{ primary: "原典", theory: "諸説", legend: "要確認" }}
