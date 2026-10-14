@@ -1,7 +1,7 @@
 // 書き出した動画の品質チェック（自動で確認できる部分）と、目視確認用の静止画の書き出し。
 //
 // 使い方:
-//   node tools/qa.mjs [動画ファイル] [--stills]
+//   node tools/qa.mjs [動画ファイル] [--ep=ep02] [--stills]
 //   環境変数 BROWSER_EXECUTABLE で、Remotion に使うブラウザ（chrome-headless-shell）を指定できる。
 //
 // 自動チェック: 解像度・fps・フレーム数・音声ストリーム・長さ・読みの一覧の有無。
@@ -13,6 +13,7 @@ import { existsSync, mkdirSync, readFileSync } from "node:fs";
 const args = process.argv.slice(2);
 const file = args.find((a) => !a.startsWith("--")) ?? "out/ep01-sekigahara-master.mp4"; // node tools/master.mjs で音量を整えたもの
 const ep = args.find((a) => a.startsWith("--ep="))?.slice(5); // 例: --ep=ep02
+const COMPOSITION = ep === "ep02" ? "Ep02Behaviorism" : "Ep01Sekigahara";
 const timing = JSON.parse(readFileSync(ep ? `src/${ep}/timing.json` : "src/timing.json", "utf8"));
 const results = [];
 const check = (name, ok, detail = "") => results.push({ name, ok, detail });
@@ -29,11 +30,19 @@ check("音声ストリームがある", Boolean(a), a ? `${a.codec_name} ${a.sam
 const secs = Number(probe.format.duration);
 check("長さが映像と音声で 0.1 秒以内に一致", a ? Math.abs(Number(a.duration) - Number(v.duration)) < 0.1 : false, `${v?.duration} / ${a?.duration}`);
 check("ショートとして 90 秒以内", secs <= 90, `${secs.toFixed(1)} 秒`);
-check("読みの一覧がある（docs/narration-readings.md）", existsSync("../docs/narration-readings.md"));
+const readings = ep ? `../docs/narration-readings-${ep}.md` : "../docs/narration-readings.md";
+check(`読みの一覧がある（${readings.slice(3)}）`, existsSync(readings));
 // 音量：SNS 向けの目安は -14 LUFS 前後（-16〜-12）。小さすぎるとスマホで聞こえない
 const eb = spawnSync("ffmpeg", ["-hide_banner", "-nostats", "-i", file, "-vn", "-af", "ebur128=peak=true", "-f", "null", "-"], { encoding: "utf8" }).stderr;
 const loud = Number([...(eb || "").matchAll(/I:\s+(-?[\d.]+) LUFS/g)].pop()?.[1]);
 check("音量（統合ラウドネス）が -16〜-12 LUFS", loud >= -16 && loud <= -12, `${loud} LUFS`);
+
+// 最初のフレームは、サムネイルとして使われることがある。中身（明るい文字や図）が見えているか確認する（失敗にはしない）
+// 暗い配色でも通るよう、平均の明るさではなく、「明るい画素（>100）の割合」で見る
+const notes = [];
+const first = spawnSync("ffmpeg", ["-v", "error", "-i", file, "-frames:v", "1", "-vf", "scale=135:240,format=gray", "-f", "rawvideo", "-"], { maxBuffer: 1 << 20 }).stdout;
+const bright = first.length ? first.filter((x) => x > 100).length / first.length : 0;
+if (bright < 0.02) notes.push(`最初のフレームに、明るい文字や図がほとんどない（明るい画素 ${(bright * 100).toFixed(1)}%）。サムネイルになる場合は、中身のある画にする`);
 
 if (args.includes("--stills")) {
   mkdirSync("out/qa", { recursive: true });
@@ -47,10 +56,11 @@ if (args.includes("--stills")) {
   const browser = process.env.BROWSER_EXECUTABLE ? [`--browser-executable=${process.env.BROWSER_EXECUTABLE}`] : [];
   browser.push("--gl=angle"); // 3D（WebGL）の描画
   for (const [name, f] of frames) {
-    execFileSync("npx", ["remotion", "still", "src/index.ts", "Ep01Sekigahara", `out/qa/${name}.png`, `--frame=${f}`, ...browser], { stdio: "ignore" });
+    execFileSync("npx", ["remotion", "still", "src/index.ts", COMPOSITION, `out/qa/${name}.png`, `--frame=${f}`, ...browser], { stdio: "ignore" });
   }
   check(`静止画 ${frames.length} 枚を out/qa/ に出力（目視で確認）`, true);
 }
 
 for (const r of results) console.log(`${r.ok ? "OK  " : "NG  "} ${r.name}${r.detail ? `  [${r.detail}]` : ""}`);
+for (const n of notes) console.log(`注意 ${n}`);
 process.exit(results.every((r) => r.ok) ? 0 : 1);

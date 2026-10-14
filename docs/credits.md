@@ -60,6 +60,8 @@
 
 ## 参考にした資料（コード・素材は取り込んでいない）
 
+- 動きと見せ方の考え方：whaleyxbt/claude-motion（MIT）、LottieFiles/motion-design-skill（MIT）。評価と取り入れた内容は `docs/references.md`、要約は `docs/motion-guidelines.md`。`video/tools/sheet.mjs` は、前者の「拍ごとのコンタクトシート」の考え方を参考に、自作した。
+
 - video-shotcraft（Apache-2.0）の品質基準：静止時間・動きの加速度・ペース・音の考え方。https://github.com/Vincentwei1021/video-shotcraft
   同梱の効果音には、出所が不明なものがあるため、コピーしていない。
 - video-talkcraft（PolyForm Noncommercial）：商用利用に作者の許可が必要なため、コードは取り込んでいない。「音声に動きを合わせる」考え方のみを参考にした（実装は VOICEVOX のモーラ長から自作）。
