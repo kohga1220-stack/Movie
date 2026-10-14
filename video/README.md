@@ -81,3 +81,13 @@ node tools/qa.mjs out/ep02-behaviorism-master.mp4 --ep=ep02
 ```
 
 台本は未検証の下書き（docs/episode-02-behaviorism.md）。事実確認のゲートを通るまで公開しない。タグの表示は「原典」「諸説」「要確認」。
+
+## 動画の確認（コンタクトシート）
+
+```bash
+node tools/sheet.mjs out/ep02-behaviorism-master.mp4 --ep=ep02   # out/sheets/*.png（8 コマずつ。動画は描画し直さない）
+node tools/qa.mjs out/ep02-behaviorism-master.mp4 --ep=ep02      # 自動チェック（最初のフレームが真っ暗なら「注意」）
+```
+
+見る観点は `docs/qa-checklist.md`、動きの基準は `docs/motion-guidelines.md`。参考にした公開リポジトリの評価は `docs/references.md`。
+Remotion の公式エージェント用スキルを、手元で使う場合は `npx skills add remotion-dev/skills`（このリポジトリには取り込まない）。

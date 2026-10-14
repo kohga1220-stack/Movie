@@ -31,7 +31,8 @@ const Caption: React.FC<{ scene: SceneDef }> = ({ scene }) => {
 };
 
 const Title: React.FC<{ scene: SceneDef }> = ({ scene }) => {
-  const o = useProgress(0, 12);
+  const p = useProgress(0, 12);
+  const o = scene.from === 0 ? 1 : p; // 最初のフレームはサムネイルになることがあるので、題名を最初から出す
   return (
     <div style={{ position: "absolute", top: 156, left: 60, right: 60, display: "flex", alignItems: "center", justifyContent: "space-between", opacity: o }}>
       <div style={{ fontFamily: theme.serif, fontSize: 70, fontWeight: 900, textShadow: "0 4px 14px rgba(0,0,0,0.85)" }}>{scene.title}</div>
@@ -42,7 +43,9 @@ const Title: React.FC<{ scene: SceneDef }> = ({ scene }) => {
 
 const SceneFrame: React.FC<{ scene: SceneDef; Scene: React.FC }> = ({ scene, Scene }) => {
   const f = useCurrentFrame();
-  const fade = interpolate(f, [0, 8, scene.frames - 8, scene.frames], [0, 1, 1, 0], { ...clamp });
+  const fadeIn = scene.from === 0 ? 1 : interpolate(f, [0, 8], [0, 1], { ...clamp }); // 最初の場面は、フェードインしない
+  const fadeOut = interpolate(f, [scene.frames - 8, scene.frames], [1, 0], { ...clamp });
+  const fade = Math.min(fadeIn, fadeOut);
   return (
     <AbsoluteFill style={{ opacity: fade }}>
       <CueContext.Provider value={{ chunks: scene.chunks.map((c) => c.startFrame), marks: scene.marks, from: scene.from }}>

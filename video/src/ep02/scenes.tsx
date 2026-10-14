@@ -1,9 +1,9 @@
 // 第2話：行動主義と新行動主義。年表・書誌カード・概念図で見せる（3D・地図は使わない）。
 import React from "react";
-import { AbsoluteFill, interpolate } from "remotion";
+import { AbsoluteFill } from "remotion";
 import { theme } from "../config";
 import { useCue } from "../cues";
-import { clamp, PaperCard, Stamp, useProgress, useSpring } from "../parts";
+import { PaperCard, Stamp, useProgress, useSpring } from "../parts";
 import { Phrase } from "../Text";
 
 const YEARS = [1913, 1948, 1957, 1959];
@@ -66,7 +66,7 @@ const Chip: React.FC<{ at: number; text: string; dim?: boolean; dashed?: boolean
 
 export const Intro: React.FC = () => {
   const c1 = useCue(1);
-  const n = Math.round(interpolate(useProgress(4, 40), [0, 1], [1850, 1913], clamp));
+  const n = 1913; // 最初のフレームがサムネイルになるので、数え上げはせず、最初から正しい年を出す
   return (
     <AbsoluteFill>
       <Timeline active={0} />
