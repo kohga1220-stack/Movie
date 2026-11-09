@@ -1,7 +1,7 @@
 // Gemini などで生成した映像クリップを、取り込み前に確認し、整える。
 //
 // 使い方（video/ で実行）:
-//   node tools/check_clips.mjs [入力フォルダ] [--normalize]
+//   node tools/check_clips.mjs [入力フォルダ] [--normalize] [--full]   （--full：C01〜C10 の方式）
 //   既定の入力フォルダ: clips-in/ep02/（S1-A.mp4 のように、ショット ID で名前を付ける。docs/gemini-video-prompts-ep02.md 参照）
 //
 // 確認：期待するショットの有無・縦横比 9:16・長さ・音声の有無・fps。確認用の画像（各クリップの 4 コマ）を out/clips/ に出す。
@@ -14,10 +14,11 @@ import { basename, extname, join } from "node:path";
 
 const args = process.argv.slice(2);
 const dir = args.find((a) => !a.startsWith("--")) ?? "clips-in/ep02";
-const EXPECTED = ["S1-A", "S1-B", "S2-A", "S2-B", "S2-C", "S3-A", "S3-B", "S3-C", "S4-A", "S4-B", "S4-C", "S5-A", "S5-B", "S5-C", "S6-A"];
+const FULL = args.includes("--full"); // 全部 Gemini の方式（C01〜C10。docs/gemini-full-production-ep02.md）
+const EXPECTED = FULL ? Array.from({ length: 10 }, (_, i) => `C${String(i + 1).padStart(2, "0")}`) : ["S1-A", "S1-B", "S2-A", "S2-B", "S2-C", "S3-A", "S3-B", "S3-C", "S4-A", "S4-B", "S4-C", "S5-A", "S5-B", "S5-C", "S6-A"];
 const FONT = "public/fonts/NotoSansJP-Medium.ttf";
 const labelFilter = (label) => (existsSync(FONT) ? `,drawtext=fontfile=${FONT}:text='${label}':x=6:y=6:fontsize=16:fontcolor=white:box=1:boxcolor=black@0.6:boxborderw=3` : ""); // フォントがない環境（npm install 前）でも動くように
-const MAX_SEC = 8.5; // プロンプト集の上限（8 秒）に少し余裕を持たせる
+const MAX_SEC = FULL ? 10.5 : 8.5; // 上限（映像のみの方式は 8 秒、全部 Gemini の方式は 10 秒）に少し余裕を持たせる
 const rows = [];
 const note = (id, ok, text) => rows.push({ id, ok, text });
 
@@ -49,7 +50,8 @@ for (const id of EXPECTED) {
   if (Math.abs(ratio - 9 / 16) > 0.01) issues.push(`縦横比が 9:16 でない（${v.width}x${v.height}）`);
   if (dur > MAX_SEC) issues.push(`長い（${dur.toFixed(1)}秒）`);
   if (dur < 2) issues.push(`短い（${dur.toFixed(1)}秒）`);
-  const audioNote = hasAudio ? "（音声あり。取り込み時に外す）" : "";
+  const audioNote = hasAudio ? (FULL ? "（音声あり）" : "（音声あり。取り込み時に外す）") : FULL ? "（音声なし：ナレーションが入っていない）" : "";
+  if (FULL && !hasAudio) issues.push("音声がない（ナレーションが必要）");
   note(id, issues.length === 0, `${v.width}x${v.height} ${fps.toFixed(0)}fps ${dur.toFixed(1)}s${audioNote}${issues.length ? "  ← " + issues.join("／") : ""}`);
   // 確認用の 4 コマ
   for (const [k, frac] of [0, 0.33, 0.66, 0.97].entries()) {
