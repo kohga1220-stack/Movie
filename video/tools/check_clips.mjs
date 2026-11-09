@@ -6,7 +6,8 @@
 //
 // 確認：期待するショットの有無・縦横比 9:16・長さ・音声の有無・fps。確認用の画像（各クリップの 4 コマ）を out/clips/ に出す。
 //   → 画像は、人（または Claude）が、文字・顔・動物の描写・字幕の領域を目視で確認するためのもの。自動では判定できない。
-// --normalize：1080x1920・30fps・音声なしに揃えて public/video/ep02/ に書き出す（元ファイルは変えない）。
+// --normalize：720x1280・30fps・音声なしに揃えて public/video/ep02/ に書き出す（元ファイルは変えない）。Remotion が 1080x1920 に拡大して使う。
+//   元が 720x1280 なので、ファイルは拡大せず、小さく保つ（Git に入れて、新しい環境でも描画できるようにするため）。
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, rmSync } from "node:fs";
 import { basename, extname, join } from "node:path";
@@ -59,7 +60,7 @@ for (const id of EXPECTED) {
   }
   if (args.includes("--normalize")) {
     mkdirSync("public/video/ep02", { recursive: true });
-    execFileSync("ffmpeg", ["-y", "-v", "error", "-i", path, "-an", "-vf", "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=30", "-c:v", "libx264", "-crf", "18", "-pix_fmt", "yuv420p", `public/video/ep02/${id}.mp4`]);
+    execFileSync("ffmpeg", ["-y", "-v", "error", "-i", path, "-an", "-vf", "scale=720:1280:force_original_aspect_ratio=increase,crop=720:1280,fps=30", "-c:v", "libx264", "-crf", "22", "-preset", "slow", "-pix_fmt", "yuv420p", `public/video/ep02/${id}.mp4`]);
   }
 }
 
