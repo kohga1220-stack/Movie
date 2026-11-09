@@ -14,6 +14,8 @@ import { basename, extname, join } from "node:path";
 const args = process.argv.slice(2);
 const dir = args.find((a) => !a.startsWith("--")) ?? "clips-in/ep02";
 const EXPECTED = ["S1-A", "S1-B", "S2-A", "S2-B", "S2-C", "S3-A", "S3-B", "S3-C", "S4-A", "S4-B", "S4-C", "S5-A", "S5-B", "S5-C", "S6-A"];
+const FONT = "public/fonts/NotoSansJP-Medium.ttf";
+const labelFilter = (label) => (existsSync(FONT) ? `,drawtext=fontfile=${FONT}:text='${label}':x=6:y=6:fontsize=16:fontcolor=white:box=1:boxcolor=black@0.6:boxborderw=3` : ""); // フォントがない環境（npm install 前）でも動くように
 const MAX_SEC = 8.5; // プロンプト集の上限（8 秒）に少し余裕を持たせる
 const rows = [];
 const note = (id, ok, text) => rows.push({ id, ok, text });
@@ -52,7 +54,7 @@ for (const id of EXPECTED) {
   for (const [k, frac] of [0, 0.33, 0.66, 0.97].entries()) {
     const out = `out/clips/.t-${id}-${k}.png`;
     const label = `${id}  ${(dur * frac).toFixed(1)}s`;
-    execFileSync("ffmpeg", ["-y", "-v", "error", "-ss", (dur * frac).toFixed(2), "-i", path, "-frames:v", "1", "-vf", `scale=270:480,drawtext=fontfile=public/fonts/NotoSansJP-Medium.ttf:text='${label}':x=6:y=6:fontsize=16:fontcolor=white:box=1:boxcolor=black@0.6:boxborderw=3`, out]);
+    execFileSync("ffmpeg", ["-y", "-v", "error", "-ss", (dur * frac).toFixed(2), "-i", path, "-frames:v", "1", "-vf", `scale=270:480${labelFilter(label)}`, out]);
     tiles.push(out);
   }
   if (args.includes("--normalize")) {
