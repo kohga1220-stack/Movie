@@ -42,6 +42,26 @@ text, letters, numbers, subtitles, watermark, logo, real person's face, celebrit
 photorealistic human faces, archival film look, cartoon mascots, gore, harm to animals,
 flashing lights, glitch, heavy lens flare, neon cyberpunk, fast motion, shaky camera.
 
+DELIVERY RULES (apply to every shot):
+1. Name the file exactly "<ShotID>.mp4" (for example S1-A.mp4) and make it downloadable.
+   If you can only give a preview, say so and tell me where the download button is.
+2. After each clip, print this LOG block (plain text, no extra commentary):
+   SHOT: <ShotID>
+   PROMPT_USED: <the exact prompt text you used, verbatim>
+   DURATION_SEC: <number, or "unknown">
+   ASPECT: <e.g. 9:16>
+   SELF_CHECK (answer yes / no / unsure for each):
+     readable_text_or_numbers_visible: ...
+     real_person_face_visible: ...
+     animal_looks_harmed: ...
+     contains_flashing_or_cuts: ...
+     top_15pct_and_bottom_25pct_calm: ...
+   NOTES: <anything unexpected, one line>
+   Do not say "pass" if any answer is "unsure". If any check fails, regenerate once with the
+   fix and show the new LOG.
+3. When I say "manifest", print a table of all shots: ShotID | file name | status
+   (ok / redo / not yet) | one-line note. List the shots to redo at the end.
+
 Reply "ready" and wait for shot 1.
 ```
 
@@ -240,7 +260,34 @@ Elegant, hopeful, forward-looking mood. Vertical 9:16.
 5. `node tools/qa.mjs` と `node tools/sheet.mjs`（コンタクトシート）で、文字の重なりと、字幕の可読性を確認する。
 6. 概要欄とクレジット：`docs/credits.md` に「映像の一部に Gemini（Google）で生成した映像を使用」と、使用日・使ったモデル名を記録する。**各社の利用規約・商用利用・AI 表示ルールは未確認。公開前に確認する。**
 
-## 6. うまくいかないとき
+## 6. 保存と、Claude による確認
+
+Gemini の画面は、このリポジトリに直接書き込めない。次の流れで、ファイルとして保存して、確認できる状態にする。
+
+**① Gemini で（§1 の DELIVERY RULES による）**
+- ファイル名を、ショット ID（`S1-A.mp4` など）にして、ダウンロードする。
+- 1 本ごとに出る LOG（使ったプロンプト、長さ、自己チェック）を、`S1-A.log.txt` のように、動画の横に保存する（コピーして貼り付けるだけでよい）。
+- 全部できたら「manifest」と送り、出た表を `manifest.txt` に保存する。
+
+**② 動画を、私（Claude）に渡す（いずれか）**
+| 方法 | 手順 | 備考 |
+|---|---|---|
+| A. チャットに添付 | 動画（と LOG）を、このセッションのチャットに添付して送る | いちばん簡単。添付した動画を、私がこの環境で開けるかは、**未確認**（試して、だめなら B か C） |
+| B. Google ドライブ | フォルダを作って、動画を入れ、共有リンクを送る | 私がドライブから読めるかは、**未確認** |
+| C. このリポジトリ | `clips/ep02/` に動画を置いて、ブランチ `clips/ep02` に push する（1 本 5 MB 以下に圧縮：`ffmpeg -i in.mp4 -vf scale=540:960 -crf 30 -an out.mp4`） | 確実に読める。容量が大きくなるので、使い終わったらブランチを消す |
+
+**③ 確認（私、または手元で）**
+```bash
+cd video
+mkdir -p clips-in/ep02            # ここにクリップを置く（Git には入れない）
+node tools/check_clips.mjs        # 有無・縦横比・長さ・fps を確認。確認用の画像 out/clips/sheet-*.png を出す
+node tools/check_clips.mjs --normalize   # 1080x1920・30fps・音声なしに整えて public/video/ep02/ に出す
+```
+- 自動で判定できるのは、ファイルの有無・縦横比・長さ・音声の有無・fps だけ。**文字・顔・動物の描写・字幕の領域は、確認用の画像を見て、人（または私）が判断する。**
+- 私が確認するときは、確認用の画像（各クリップの 4 コマ）と、LOG の自己チェックを突き合わせて、§4 のチェックリストに沿って報告する。LOG は Gemini の自己申告なので、**画像での確認を省かない。**
+- 作り直すものは、`manifest.txt` の `redo` と私の報告を合わせて決める。
+
+## 7. うまくいかないとき
 
 | 症状 | 対処 |
 |---|---|
