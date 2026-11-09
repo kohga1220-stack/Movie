@@ -246,7 +246,7 @@ VOICE (0.4 s start): 1950年代以降、心の働きに目を向ける「認知�
 **起きたこと**：プロンプトに、実在の人物名（ジョン・ワトソン、トールマン、スキナー、チョムスキー など）が入っていると、Gemini が「著名人は描写できません」と答えることがある（今回の返答の原因は、ナレーションと字幕に人名を入れたことだと思われる。確証はない）。**人物を映す指示は入れていないが、名前そのものが引っかかる可能性がある。**
 
 **対処（方式 B に切り替える）**
-- Gemini には、**人名・ナレーション・字幕を一切入れない**、映像だけの指示を渡す。題名とタグ（人名を含まない）だけは、画面の文字として頼む。
+- Gemini には、**人名・ナレーション・字幕を一切入れない**、映像だけの指示を渡す。画面の文字（題名・タグ）も、Gemini には頼まない。**C01 の試作で、タグ「原典」が 2 か所に出る（重複）不具合が出たため。**題名・タグ・字幕は、すべて私が重ねる（綴りが確実になる）。
 - ナレーション（人名を含む）と字幕は、**自作の VOICEVOX と Remotion で、私が入れる**。読みと綴りが確実になる。
 - 下の「人名なし版」は、§2 の各クリップから、VOICE と Caption の行を除いたもの。§2 の C01〜C10 と同じ並びで使う。
 
@@ -255,7 +255,7 @@ VOICE (0.4 s start): 1950年代以降、心の働きに目を向ける「認知�
 Understood. No real or famous person needs to be depicted at all, and no person's name will
 appear. Please ignore any previous mention of names. From now on each clip is a purely
 symbolic scene (objects, places, hands, abstract light) with NO narration and NO subtitles;
-only a short Japanese title and a tag appear as on-screen text, as specified. I will send
+no on-screen text appears at all (titles and tags will be added later). I will send
 the clip prompts one by one.
 ```
 
@@ -274,13 +274,11 @@ GLOBAL RULES:
 - No faces. Use hands, backs, silhouettes, objects, places and abstract light. Symbolic
   illustration, not archival footage. No animal harm. No logos, watermarks or brand names.
 - Keep the focal action in the middle 55% of the frame height; top 15% and bottom 25% calm and darker.
-- On-screen text: ONLY the Japanese Title (top-left, bold Japanese serif, cream) and Tag (top-right,
-  small gold outlined rounded rectangle) given in the clip prompt, spelled exactly. No other
-  letters or numbers anywhere (blank book covers, blurred papers, unmarked dials).
+- NO on-screen text at all. No titles, tags, captions, letters or numbers anywhere
+  (blank book covers, blurred papers, unmarked dials). Text will be added later by someone else.
 - Sound: very quiet slow ambient music (sparse plucked strings, low drone, no drums) and room tone.
   No voice.
-AFTER EACH CLIP print: CLIP, PROMPT_USED (verbatim), DURATION_SEC, ASPECT, ONSCREEN_TEXT_CORRECT
-(yes/no/unsure), READABLE_OTHER_TEXT (yes/no), REAL_PERSON_FACE (yes/no), ANIMAL_HARMED (yes/no),
+AFTER EACH CLIP print: CLIP, PROMPT_USED (verbatim), DURATION_SEC, ASPECT, ANY_TEXT_VISIBLE (yes/no), REAL_PERSON_FACE (yes/no), ANIMAL_HARMED (yes/no),
 LETTERBOX_OR_SEAMS (yes/no), NOTES. Never write "pass" if any answer is "unsure".
 Reply "ready" and wait for C01.
 ```
@@ -294,7 +292,6 @@ VISUAL: Slow push-in on a dark wooden desk lit by a brass lamp (warm gold light 
 navy shadows, drifting dust motes). A stack of four closed books with plain, unmarked spines.
 One hand (no face) lifts the top book's cover and opens it; the pages are blank cream paper
 with only soft blurred smudges. The open book fills the middle of the frame by the end.
-TEXT: Title (top-left): 1913年の論文   Tag (top-right): 原典
 ```
 
 #### C02（約 8 秒）— 行動主義の宣言①　［主張 2］
@@ -303,7 +300,6 @@ CLIP C02, about 8 seconds, vertical 9:16 full-frame.
 VISUAL: Slow lateral dolly along a long laboratory bench in a dim, orderly room: glass flasks,
 brass instruments, a mechanical recording drum with a paper strip slowly moving, all without
 any readable markings. Cool blue-white window light with warm gold highlights on brass. No people.
-TEXT: Title (top-left): 行動主義の宣言   Tag (top-right): 原典
 ```
 
 #### C03（約 7 秒）— 行動主義の宣言②　［主張 3・4］
@@ -313,7 +309,6 @@ VISUAL: Macro close-up with a very slow push-in on a brass gauge whose thin need
 settles precisely on a mark (dial has plain tick marks, no numbers or letters). Then a slow
 pull-back from a small dim room where a desk lamp fades out, revealing a bright window and an
 orderly laboratory beyond. Gold rim light, navy background. No people. Calm, controlled.
-TEXT: Title (top-left): 行動主義の宣言   Tag (top-right): 原典
 ```
 
 #### C04（約 8.5 秒）— 新行動主義①　［主張 5］
@@ -323,7 +318,6 @@ VISUAL: Aerial slow glide over a dark abstract landscape: a single river of gold
 two streams and curves in a new direction. Then a slow side-to-side camera move across a dark
 table with two objects: left, a brass mechanical apparatus with gears; right, an old paper with
 plain abstract lines (no writing). Warm gold grazing light, navy background. No people.
-TEXT: Title (top-left): 新行動主義   Tag (top-right): 諸説
 ```
 
 #### C05（約 5 秒）— 新行動主義②　［主張 6］
@@ -332,7 +326,6 @@ CLIP C05, about 5 seconds, vertical 9:16 full-frame.
 VISUAL: Slow push-in toward a fork in a misty path at dusk: one path in solid gold light, the other
 in faint dashed light, with a blank wooden signpost (no writing) at the fork. Navy twilight, soft fog,
 quiet uncertain mood. No people.
-TEXT: Title (top-left): 新行動主義   Tag (top-right): 諸説
 ```
 
 #### C06（約 8 秒）— 認知地図①　［主張 7］
@@ -342,8 +335,6 @@ VISUAL: Slow top-down crane shot over a stylized miniature maze with clean low w
 surface. A small stylized white rat walks calmly through the corridors, safe and unharmed. As it
 moves, a faint glowing gold map of the whole maze gradually draws itself in the air above the
 maze, like a memory taking shape. Soft lighting, shallow depth of field. Gentle, curious mood.
-TEXT: Title (top-left): 認知地図   Tag (top-right): 原典
-      Small note (bottom of the middle area, small): 概念図（イメージ）
 ```
 
 #### C07（約 10 秒）— 認知地図②　［主張 8・9］
@@ -355,8 +346,6 @@ floor-plan-like map hovering beyond. Then (about 6 s): slow top-down rotation ov
 corridor layout like wheel spokes; a small stylized white rat pauses at the center, walks toward one
 spoke, hesitates and turns toward another; faint gold lines trace several possible paths, none
 highlighted as correct. The animal is safe and unharmed. No text, no numbers in the image.
-TEXT: Title (top-left): 認知地図   Tag (top-right): 原典
-      Small note (small): 概念図（イメージ）
 ```
 
 #### C08（約 8 秒）— 言語行動①　［主張 10］
@@ -366,7 +355,6 @@ VISUAL: Slow push-in on a single closed hardcover book with a plain dark cloth c
 lettering) on a desk under warm lamplight. A few pages turn on their own in a soft breeze and settle;
 faint abstract soundwave-like ripples of gold light rise from the pages and spread across the dark
 room, evoking language. No people. Navy background, quiet scholarly mood.
-TEXT: Title (top-left): 言語行動   Tag (top-right): 諸説
 ```
 
 #### C09（約 8 秒）— 言語行動②　［主張 11・12］
@@ -377,7 +365,6 @@ printed pages beside a closed book and make a few small pencil marks in the marg
 only blurred, unreadable smudges. Neutral cool light with a gold accent; measured, analytical, not
 hostile. Then a slow static shot of a balanced brass scale in a dark space with two beams of light from
 opposite directions across it, one gold and one cool blue, neither dominating; the scale stays level.
-TEXT: Title (top-left): 言語行動   Tag (top-right): 諸説
 ```
 
 #### C10（約 10 秒）— 認知革命　［主張 13］
@@ -388,7 +375,6 @@ VISUAL: Slow upward camera move through a dark space where three streams of smal
 gently pulsing network of connected nodes, like an abstract mind forming. No recognizable human
 figure, no screens with writing. Elegant, hopeful, forward-looking. In the last 2 seconds the
 image slowly settles and darkens slightly (a quiet ending).
-TEXT: Title (top-left): 認知革命
 ```
 
 **そのあと**：クリップを添付してくれれば、私が確認し、つなぎます。ナレーション（VOICEVOX）と字幕（Remotion）は、私が重ねる。台本は、`video/src/ep02/script.json` のまま。

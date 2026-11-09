@@ -8,7 +8,7 @@
 //   → 画像は、人（または Claude）が、文字・顔・動物の描写・字幕の領域を目視で確認するためのもの。自動では判定できない。
 // --normalize：720x1280・30fps・音声なしに揃えて public/video/ep02/ に書き出す（元ファイルは変えない）。Remotion が 1080x1920 に拡大して使う。
 //   元が 720x1280 なので、ファイルは拡大せず、小さく保つ（Git に入れて、新しい環境でも描画できるようにするため）。
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, rmSync } from "node:fs";
 import { basename, extname, join } from "node:path";
 
@@ -18,6 +18,28 @@ const FULL = args.includes("--full"); // 全部 Gemini の方式（C01〜C10。d
 const EXPECTED = FULL ? Array.from({ length: 10 }, (_, i) => `C${String(i + 1).padStart(2, "0")}`) : ["S1-A", "S1-B", "S2-A", "S2-B", "S2-C", "S3-A", "S3-B", "S3-C", "S4-A", "S4-B", "S4-C", "S5-A", "S5-B", "S5-C", "S6-A"];
 const FONT = "public/fonts/NotoSansJP-Medium.ttf";
 const labelFilter = (label) => (existsSync(FONT) ? `,drawtext=fontfile=${FONT}:text='${label}':x=6:y=6:fontsize=16:fontcolor=white:box=1:boxcolor=black@0.6:boxborderw=3` : ""); // フォントがない環境（npm install 前）でも動くように
+// 縦長の出力が、中央の帯（本体）と、ぼかした上下の延長でできている場合の、継ぎ目の行を探す（行ごとの隣との差の最大）。
+// 見つからなければ null（継ぎ目なし＝フルフレームの可能性）。値は、元の高さでの行番号。
+const findBand = (path, w, h, dur) => {
+  const ys = [0.35, 0.6, 0.85].map((f) => {
+    const buf = spawnSync("ffmpeg", ["-v", "error", "-ss", (dur * f).toFixed(2), "-i", path, "-frames:v", "1", "-vf", "format=gray", "-f", "rawvideo", "-"], { maxBuffer: 1 << 26 }).stdout;
+    if (buf.length < w * h) return null;
+    const d = new Float64Array(h - 1);
+    for (let y = 0; y < h - 1; y++) {
+      let sum = 0;
+      for (let x = 0; x < w; x += 2) sum += Math.abs(buf[(y + 1) * w + x] - buf[y * w + x]);
+      d[y] = sum / (w / 2);
+    }
+    const peak = (a, b) => { let m = a; for (let y = a; y < b; y++) if (d[y] > d[m]) m = y; return [m, d[m]]; };
+    const [t, tv] = peak(Math.floor(h * 0.15), Math.floor(h * 0.45));
+    const [b, bv] = peak(Math.floor(h * 0.55), Math.floor(h * 0.85));
+    return { t, tv, b, bv };
+  }).filter(Boolean);
+  const med = (k) => ys.map((r) => r[k]).sort((a, b) => a - b)[Math.floor(ys.length / 2)];
+  if (!ys.length) return null;
+  const strong = med("tv") > 25 && med("bv") > 25; // 継ぎ目は、隣との差がはっきり大きい
+  return strong ? { top: med("t") + 1, bottom: med("b") + 1 } : null;
+};
 const MAX_SEC = FULL ? 10.5 : 8.5; // 上限（映像のみの方式は 8 秒、全部 Gemini の方式は 10 秒）に少し余裕を持たせる
 const rows = [];
 const note = (id, ok, text) => rows.push({ id, ok, text });
@@ -52,7 +74,9 @@ for (const id of EXPECTED) {
   if (dur < 2) issues.push(`短い（${dur.toFixed(1)}秒）`);
   const audioNote = hasAudio ? (FULL ? "（音声あり）" : "（音声あり。取り込み時に外す）") : FULL ? "（音声なし：ナレーションが入っていない）" : "";
   if (FULL && !hasAudio) issues.push("音声がない（ナレーションが必要）");
-  note(id, issues.length === 0, `${v.width}x${v.height} ${fps.toFixed(0)}fps ${dur.toFixed(1)}s${audioNote}${issues.length ? "  ← " + issues.join("／") : ""}`);
+  const band = v.height > v.width ? findBand(path, v.width, v.height, dur) : null;
+  const bandNote = band ? `  ［継ぎ目あり：本体の帯 ${band.top}〜${band.bottom} 行（clips.ts に bandTop / bandBottom として記録）］` : v.height > v.width ? "  ［継ぎ目なし］" : "";
+  note(id, issues.length === 0, `${v.width}x${v.height} ${fps.toFixed(0)}fps ${dur.toFixed(1)}s${audioNote}${bandNote}${issues.length ? "  ← " + issues.join("／") : ""}`);
   // 確認用の 4 コマ
   for (const [k, frac] of [0, 0.33, 0.66, 0.97].entries()) {
     const out = `out/clips/.t-${id}-${k}.png`;
